@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: git-mirror-me
+Upstream-Contact: Andrei Gherzan <andrei@gherzan.com>
+Source: https://github.com/agherzan/git-mirror-me
+
+Files: go.mod go.sum
+License: MIT
+Copyright: Andrei Gherzan <andrei@gherzan.com>
