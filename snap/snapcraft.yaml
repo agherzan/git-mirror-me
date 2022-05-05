@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: Zygmunt Krynicki <me@zygoon.pl>
+#
+# SPDX-License-Identifier: MIT
+
+name: git-mirror-me 
+summary: A tool that facilitates mirroring a source to a destination git repository
+description: |
+  This CLI tool provides the ability to mirror a repository to any other git
+  repository with optional SSH authentication. For example, it can be used with
+  repositories on GitHub, GitLab, Bitbucket, etc.
+
+  Why "Me"? The name derives from the tool's "ability" to default the source
+  repository to the value computed from a GitHub action environment.
+license: MIT
+adopt-info: git-mirror-me 
+base: core20
+
+confinement: strict
+
+parts:
+  git-mirror-me:
+    plugin: go
+    source: .
+    build-packages: [git]
+    override-pull: |
+      snapcraftctl pull
+      # Set defaults
+      grade=devel
+      tag="$(git describe --tags --abbrev=0)" || true
+      hash="$(git rev-parse --short HEAD)"
+      # Check for tagged version
+      if [ -n "$tag" ]; then
+        count="$(git rev-list "$tag".. --count)"
+        if [ "$count" -eq 0 ]; then
+          version="$tag"
+          grade=stable
+        else
+          version="$tag+git$count.$hash"
+        fi
+      else
+        count="$(git rev-list HEAD --count)"
+        version="0+git$count.$hash"
+      fi
+      # Relay back to snapcraft
+      snapcraftctl set-grade "$grade"
+      snapcraftctl set-version "$version"
+    override-prime: |
+      snapcraftctl prime
+      strip bin/git-mirror-me
+
+apps:
+  git-mirror-me:
+    command: bin/git-mirror-me
+    plugs: [network, home]
