@@ -69,7 +69,6 @@ Environment variables
 			"environment variable.")
 	flags.BoolVar(&debug, "debug", false, "Run this tool in debug mode.")
 	if err := flags.Parse(arguments); err != nil {
-		fmt.Println(arguments)
 		return nil, flagsOutput.String(), err
 	}
 
