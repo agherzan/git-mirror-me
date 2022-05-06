@@ -169,7 +169,7 @@ func TestNewTestRepo(t *testing.T) {
 		t.Fatalf("unexpected refs in repo: %s", refs)
 	}
 
-	check, err := RepoRefsCheckHash(repo, hash)
+	check, err := RepoRefsCheckHash(repo, hash, "")
 	if err != nil {
 		t.Fatal("failed to check repo refs hash")
 	}
@@ -278,7 +278,7 @@ func TestRepoRefsCheckHash(t *testing.T) {
 		t.Fatalf("error creating a test repo %s", err)
 	}
 
-	pass, err := RepoRefsCheckHash(repo, hash)
+	pass, err := RepoRefsCheckHash(repo, hash, "")
 	if err != nil {
 		t.Fatalf("RepoRefsCheckHash failed: %s", err)
 	}
@@ -287,7 +287,25 @@ func TestRepoRefsCheckHash(t *testing.T) {
 		t.Fatal("unexpected hash test result")
 	}
 
-	pass, err = RepoRefsCheckHash(repo, plumbing.NewHash(""))
+	pass, err = RepoRefsCheckHash(repo, hash, "refs/")
+	if err != nil {
+		t.Fatalf("RepoRefsCheckHash failed: %s", err)
+	}
+
+	if !pass {
+		t.Fatal("unexpected hash test result")
+	}
+
+	pass, err = RepoRefsCheckHash(repo, hash, "nomatch/")
+	if err != nil {
+		t.Fatalf("RepoRefsCheckHash failed: %s", err)
+	}
+
+	if !pass {
+		t.Fatal("unexpected hash test result")
+	}
+
+	pass, err = RepoRefsCheckHash(repo, plumbing.NewHash(""), "")
 	if err != nil {
 		t.Fatalf("RepoRefsCheckHash failed: %s", err)
 	}

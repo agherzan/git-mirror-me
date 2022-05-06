@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/go-git/go-billy/v5/memfs"
@@ -208,9 +209,10 @@ func RefsToStrings(refs []*plumbing.Reference) []string {
 	return str
 }
 
-// RepoRefsCheckHash checks if all the references in a repository point to the
-// same hash.
-func RepoRefsCheckHash(repo *git.Repository, hash plumbing.Hash) (bool, error) {
+// RepoRefsCheckHash checks if the references in a repository point to the same
+// hash. When prefix is provided, only the references prefixed accordingly are
+// checked.
+func RepoRefsCheckHash(repo *git.Repository, hash plumbing.Hash, prefix string) (bool, error) {
 	var result bool
 
 	refs, err := repo.References()
@@ -221,6 +223,9 @@ func RepoRefsCheckHash(repo *git.Repository, hash plumbing.Hash) (bool, error) {
 	result = true
 
 	_ = refs.ForEach(func(ref *plumbing.Reference) error {
+		if len(prefix) != 0 && !strings.HasPrefix(ref.Name().String(), prefix) {
+			return nil
+		}
 		if ref.Hash() != hash {
 			result = false
 		}

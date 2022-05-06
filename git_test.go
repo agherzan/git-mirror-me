@@ -75,7 +75,7 @@ func TestFilterOutRefsMatch(t *testing.T) {
 		t.Fatalf("unexpected refs in repo: %s", refs)
 	}
 
-	check, err := utils.RepoRefsCheckHash(repo, head)
+	check, err := utils.RepoRefsCheckHash(repo, head, "")
 	if err != nil {
 		t.Fatal("failed to check repo refs hash")
 	}
@@ -128,7 +128,7 @@ func TestFilterOutRefsNoMatch(t *testing.T) {
 		t.Fatalf("unexpected refs in repo: %s", refs)
 	}
 
-	check, err := utils.RepoRefsCheckHash(repo, head)
+	check, err := utils.RepoRefsCheckHash(repo, head, "")
 	if err != nil {
 		t.Fatal("failed to check repo refs hash")
 	}
@@ -174,7 +174,7 @@ func TestFilterOutRefsDeleteAll(t *testing.T) {
 		t.Fatalf("unexpected refs in repo: %s", refs)
 	}
 
-	check, err := utils.RepoRefsCheckHash(repo, head)
+	check, err := utils.RepoRefsCheckHash(repo, head, "")
 	if err != nil {
 		t.Fatal("failed to check repo refs hash")
 	}
@@ -218,7 +218,7 @@ func TestFilterOutRefsNoPrefix(t *testing.T) {
 		t.Fatalf("unexpected refs in repo: %s", refs)
 	}
 
-	check, err := utils.RepoRefsCheckHash(repo, head)
+	check, err := utils.RepoRefsCheckHash(repo, head, "")
 	if err != nil {
 		t.Fatal("failed to check repo refs hash")
 	}
@@ -493,7 +493,7 @@ func TestSetupStagingRepo(t *testing.T) {
 		t.Fatalf("unexpected refs in staging repo: %s", stagingRepoRefs)
 	}
 
-	ok, err := utils.RepoRefsCheckHash(stagingRepo, srcHead)
+	ok, err := utils.RepoRefsCheckHash(stagingRepo, srcHead, "")
 	if err != nil {
 		t.Fatalf("utils.RepoRefsCheckHash failed: %s", err)
 	}
@@ -579,7 +579,7 @@ func TestDoMirror(t *testing.T) {
 		t.Fatalf("unexpected refs in the dst repo: %s", dstRepoRefs)
 	}
 
-	ok, err := utils.RepoRefsCheckHash(dstRepo, srcHead)
+	ok, err := utils.RepoRefsCheckHash(dstRepo, srcHead, "refs/")
 	if err != nil {
 		t.Fatalf("dst repo hash check failed: %s", err)
 	}
