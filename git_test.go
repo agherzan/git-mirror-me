@@ -34,186 +34,197 @@ Hau0thh3byP4srEz6dAAAADmFuZHJlaUBxd2lya2xlAQIDBA==
 		"AIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
 )
 
-// TestFilterOutRefs tests the filterOutRefs function.
-func TestFilterOutRefs(t *testing.T) {
+// TestFilterOutRefsMatch tests the filterOutRefs function when the filter matches
+// some references.
+func TestFilterOutRefsMatch(t *testing.T) {
 	t.Parallel()
 
-	{
-		// Filter matches refs.
-		path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
-		if err != nil {
-			t.Fatalf("failed to create a temporary repo: %s", err)
-		}
-
-		defer os.RemoveAll(path)
-
-		repo, head, err := utils.NewTestRepo(path, []string{
-			"refs/heads/a",
-			"refs/heads/b",
-			"refs/meta/a",
-			"refs/meta/b",
-		})
-		if err != nil {
-			t.Fatalf("failed to create a test repo: %s", err)
-		}
-
-		err = filterOutRefs(repo, []string{"refs/meta"})
-		if err != nil {
-			t.Fatalf("failed to filter refs: %s", err)
-		}
-
-		refs, err := utils.RepoRefsSlice(repo)
-		if err != nil {
-			t.Fatalf("failed to get repo's refs: %s", err)
-		}
-
-		if !utils.SlicesAreEqual(refs, []string{
-			"HEAD",
-			"refs/heads/master",
-			"refs/heads/a",
-			"refs/heads/b",
-		}) {
-			t.Fatalf("unexpected refs in repo: %s", refs)
-		}
-
-		check, err := utils.RepoRefsCheckHash(repo, head)
-		if err != nil {
-			t.Fatal("failed to check repo refs hash")
-		}
-
-		if !check {
-			t.Fatal("unexpected ref hash")
-		}
+	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
+	if err != nil {
+		t.Fatalf("failed to create a temporary repo: %s", err)
 	}
-	{
-		// Filter doesn't match refs.
-		path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
-		if err != nil {
-			t.Fatalf("failed to create a temporary repo: %s", err)
-		}
 
-		defer os.RemoveAll(path)
+	defer os.RemoveAll(path)
 
-		repo, head, err := utils.NewTestRepo(path, []string{
-			"refs/heads/a",
-			"refs/heads/b",
-			"refs/meta/a",
-			"refs/meta/b",
-		})
-		if err != nil {
-			t.Fatalf("failed to create a test repo: %s", err)
-		}
-
-		err = filterOutRefs(repo, []string{"refs/nonexistent"})
-		if err != nil {
-			t.Fatalf("failed to filter refs: %s", err)
-		}
-
-		refs, err := utils.RepoRefsSlice(repo)
-		if err != nil {
-			t.Fatalf("failed to get repo's refs: %s", err)
-		}
-
-		if !utils.SlicesAreEqual(refs, []string{
-			"HEAD",
-			"refs/heads/master",
-			"refs/heads/a",
-			"refs/heads/b",
-			"refs/meta/a",
-			"refs/meta/b",
-		}) {
-			t.Fatalf("unexpected refs in repo: %s", refs)
-		}
-
-		check, err := utils.RepoRefsCheckHash(repo, head)
-		if err != nil {
-			t.Fatal("failed to check repo refs hash")
-		}
-
-		if !check {
-			t.Fatal("unexpected ref hash")
-		}
+	repo, head, err := utils.NewTestRepo(path, []string{
+		"refs/heads/a",
+		"refs/heads/b",
+		"refs/meta/a",
+		"refs/meta/b",
+	})
+	if err != nil {
+		t.Fatalf("failed to create a test repo: %s", err)
 	}
-	{
-		// Delete all refs.
-		path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
-		if err != nil {
-			t.Fatalf("failed to create a temporary repo: %s", err)
-		}
 
-		defer os.RemoveAll(path)
-
-		repo, head, err := utils.NewTestRepo(path, []string{
-			"refs/heads/a",
-			"refs/heads/b",
-			"refs/meta/a",
-			"refs/meta/b",
-		})
-		if err != nil {
-			t.Fatalf("failed to create a test repo: %s", err)
-		}
-
-		err = filterOutRefs(repo, []string{""})
-		if err != nil {
-			t.Fatalf("failed to filter refs: %s", err)
-		}
-
-		refs, err := utils.RepoRefsSlice(repo)
-		if err != nil {
-			t.Fatalf("failed to get repo's refs: %s", err)
-		}
-		if !utils.SlicesAreEqual(refs, []string{}) {
-			t.Fatalf("unexpected refs in repo: %s", refs)
-		}
-
-		check, err := utils.RepoRefsCheckHash(repo, head)
-		if err != nil {
-			t.Fatal("failed to check repo refs hash")
-		}
-
-		if !check {
-			t.Fatal("unexpected ref hash")
-		}
+	err = filterOutRefs(repo, []string{"refs/meta"})
+	if err != nil {
+		t.Fatalf("failed to filter refs: %s", err)
 	}
-	{
-		// No prefix.
-		path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
-		if err != nil {
-			t.Fatalf("failed to create a temporary repo: %s", err)
-		}
 
-		defer os.RemoveAll(path)
+	refs, err := utils.RepoRefsSlice(repo)
+	if err != nil {
+		t.Fatalf("failed to get repo's refs: %s", err)
+	}
 
-		repo, head, err := utils.NewTestRepo(path, []string{})
-		if err != nil {
-			t.Fatalf("failed to create a test repo: %s", err)
-		}
+	if !utils.SlicesAreEqual(refs, []string{
+		"HEAD",
+		"refs/heads/master",
+		"refs/heads/a",
+		"refs/heads/b",
+	}) {
+		t.Fatalf("unexpected refs in repo: %s", refs)
+	}
 
-		err = filterOutRefs(repo, []string{})
-		if err != nil {
-			t.Fatalf("failed to filter refs: %s", err)
-		}
+	check, err := utils.RepoRefsCheckHash(repo, head)
+	if err != nil {
+		t.Fatal("failed to check repo refs hash")
+	}
 
-		refs, err := utils.RepoRefsSlice(repo)
-		if err != nil {
-			t.Fatalf("failed to get repo's refs: %s", err)
-		}
+	if !check {
+		t.Fatal("unexpected ref hash")
+	}
+}
 
-		if !utils.SlicesAreEqual(refs, []string{
-			"HEAD",
-			"refs/heads/master",
-		}) {
-			t.Fatalf("unexpected refs in repo: %s", refs)
-		}
+// TestFilterOutRefsNoMatch tests the filterOutRefs function when the filter doesn't
+// match.
+func TestFilterOutRefsNoMatch(t *testing.T) {
+	t.Parallel()
 
-		check, err := utils.RepoRefsCheckHash(repo, head)
-		if err != nil {
-			t.Fatal("failed to check repo refs hash")
-		}
+	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
+	if err != nil {
+		t.Fatalf("failed to create a temporary repo: %s", err)
+	}
 
-		if !check {
-			t.Fatal("unexpected ref hash")
-		}
+	defer os.RemoveAll(path)
+
+	repo, head, err := utils.NewTestRepo(path, []string{
+		"refs/heads/a",
+		"refs/heads/b",
+		"refs/meta/a",
+		"refs/meta/b",
+	})
+	if err != nil {
+		t.Fatalf("failed to create a test repo: %s", err)
+	}
+
+	err = filterOutRefs(repo, []string{"refs/nonexistent"})
+	if err != nil {
+		t.Fatalf("failed to filter refs: %s", err)
+	}
+
+	refs, err := utils.RepoRefsSlice(repo)
+	if err != nil {
+		t.Fatalf("failed to get repo's refs: %s", err)
+	}
+
+	if !utils.SlicesAreEqual(refs, []string{
+		"HEAD",
+		"refs/heads/master",
+		"refs/heads/a",
+		"refs/heads/b",
+		"refs/meta/a",
+		"refs/meta/b",
+	}) {
+		t.Fatalf("unexpected refs in repo: %s", refs)
+	}
+
+	check, err := utils.RepoRefsCheckHash(repo, head)
+	if err != nil {
+		t.Fatal("failed to check repo refs hash")
+	}
+
+	if !check {
+		t.Fatal("unexpected ref hash")
+	}
+}
+
+// TestFilterOutRefsDeleteAll tests the filterOutRefs function for deleting all
+// references.
+func TestFilterOutRefsDeleteAll(t *testing.T) {
+	t.Parallel()
+
+	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
+	if err != nil {
+		t.Fatalf("failed to create a temporary repo: %s", err)
+	}
+
+	defer os.RemoveAll(path)
+
+	repo, head, err := utils.NewTestRepo(path, []string{
+		"refs/heads/a",
+		"refs/heads/b",
+		"refs/meta/a",
+		"refs/meta/b",
+	})
+	if err != nil {
+		t.Fatalf("failed to create a test repo: %s", err)
+	}
+
+	err = filterOutRefs(repo, []string{""})
+	if err != nil {
+		t.Fatalf("failed to filter refs: %s", err)
+	}
+
+	refs, err := utils.RepoRefsSlice(repo)
+	if err != nil {
+		t.Fatalf("failed to get repo's refs: %s", err)
+	}
+
+	if !utils.SlicesAreEqual(refs, []string{}) {
+		t.Fatalf("unexpected refs in repo: %s", refs)
+	}
+
+	check, err := utils.RepoRefsCheckHash(repo, head)
+	if err != nil {
+		t.Fatal("failed to check repo refs hash")
+	}
+
+	if !check {
+		t.Fatal("unexpected ref hash")
+	}
+}
+
+// TestFilterOutRefsNoPrefix tests the filterOutRefs function when there is no prefix
+// provided.
+func TestFilterOutRefsNoPrefix(t *testing.T) {
+	t.Parallel()
+
+	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
+	if err != nil {
+		t.Fatalf("failed to create a temporary repo: %s", err)
+	}
+
+	defer os.RemoveAll(path)
+
+	repo, head, err := utils.NewTestRepo(path, []string{})
+	if err != nil {
+		t.Fatalf("failed to create a test repo: %s", err)
+	}
+
+	err = filterOutRefs(repo, []string{})
+	if err != nil {
+		t.Fatalf("failed to filter refs: %s", err)
+	}
+
+	refs, err := utils.RepoRefsSlice(repo)
+	if err != nil {
+		t.Fatalf("failed to get repo's refs: %s", err)
+	}
+
+	if !utils.SlicesAreEqual(refs, []string{
+		"HEAD",
+		"refs/heads/master",
+	}) {
+		t.Fatalf("unexpected refs in repo: %s", refs)
+	}
+
+	check, err := utils.RepoRefsCheckHash(repo, head)
+	if err != nil {
+		t.Fatal("failed to check repo refs hash")
+	}
+
+	if !check {
+		t.Fatal("unexpected ref hash")
 	}
 }
 
