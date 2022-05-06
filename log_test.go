@@ -129,8 +129,8 @@ func TestFatal(t *testing.T) {
 	cmd := exec.Command(os.Args[0], "-test.run=TestFatal")
 	cmd.Env = append(os.Environ(), "RUNTESTFATAL=1")
 
-	err := cmd.Run()
-	if e := (&exec.ExitError{}); errors.As(err, &e) && !e.Success() {
+	e := (&exec.ExitError{})
+	if err := cmd.Run(); errors.As(err, &e) && !e.Success() {
 		return
 	}
 
