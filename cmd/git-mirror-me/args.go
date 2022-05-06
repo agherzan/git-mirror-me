@@ -78,7 +78,7 @@ Environment variables
 	return &mirror.Config{
 		SrcRepo: srcRepo,
 		DstRepo: dstRepo,
-		Ssh: mirror.SshConf{
+		SSH: mirror.SSHConf{
 			KnownHostsPath: knownHostsPath,
 		},
 		Debug: debug,

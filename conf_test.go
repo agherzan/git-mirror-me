@@ -9,18 +9,21 @@ import (
 	"testing"
 )
 
-// TestSetGetSshKey tests the getter and setter for the SSH private key.
-func TestSetGetSshKey(t *testing.T) {
+// TestSetGetSSHKey tests the getter and setter for the SSH private key.
+func TestSetGetSSHKey(t *testing.T) {
 	config := Config{
-		Ssh: SshConf{
+		SSH: SSHConf{
 			PrivateKey: "key",
 		},
 	}
-	config.SetSshKey("setkey")
-	if config.Ssh.PrivateKey != "setkey" {
+
+	config.SetSSHKey("setkey")
+
+	if config.SSH.PrivateKey != "setkey" {
 		t.Fatal("ssh key setter failed")
 	}
-	if config.GetSshKey() != "setkey" {
+
+	if config.GetSSHKey() != "setkey" {
 		t.Fatal("ssh key getter failed")
 	}
 }
@@ -28,13 +31,14 @@ func TestSetGetSshKey(t *testing.T) {
 // TestSetGetKnownHosts tests the getter and setter for the host public key.
 func TestSetGetKnownHosts(t *testing.T) {
 	config := Config{
-		Ssh: SshConf{
+		SSH: SSHConf{
 			KnownHosts: "key",
 		},
 	}
 
 	config.SetKnownHosts("setkey")
-	if config.Ssh.KnownHosts != "setkey" {
+
+	if config.SSH.KnownHosts != "setkey" {
 		t.Fatal("host key (by value) setter failed")
 	}
 
@@ -47,13 +51,14 @@ func TestSetGetKnownHosts(t *testing.T) {
 // key provided by file path.
 func TestSetGetKnownHostsPath(t *testing.T) {
 	config := Config{
-		Ssh: SshConf{
+		SSH: SSHConf{
 			KnownHostsPath: "keypath",
 		},
 	}
 
 	config.SetKnownHostsPath("setkeypath")
-	if config.Ssh.KnownHostsPath != "setkeypath" {
+
+	if config.SSH.KnownHostsPath != "setkeypath" {
 		t.Fatal("host key (by file path) setter failed")
 	}
 
@@ -68,7 +73,7 @@ func TestPretty(t *testing.T) {
 	out := Config{
 		SrcRepo: "src",
 		DstRepo: "dst",
-		Ssh: SshConf{
+		SSH: SSHConf{
 			PrivateKey:     "key",
 			KnownHosts:     "khkey",
 			KnownHostsPath: "khpath",
@@ -78,7 +83,7 @@ func TestPretty(t *testing.T) {
 	expectedOut := `{
 	"SrcRepo": "src",
 	"DstRepo": "dst",
-	"Ssh": {
+	"SSH": {
 		"PrivateKey": "3c6e0b8a9c15224a8228b9a98ca1531d",
 		"KnownHosts": "86721e0d720a6ddcb1b2a15996ecf7f1",
 		"KnownHostsPath": "khpath"
@@ -180,7 +185,7 @@ func TestProcessEnv(t *testing.T) {
 			"GMM_SSH_PRIVATE_KEY": "keyenv",
 		}
 		conf.ProcessEnv(logger, env)
-		if conf.Ssh.PrivateKey != "keyenv" {
+		if conf.SSH.PrivateKey != "keyenv" {
 			t.Fatal("failed setting SSH private key from an env variable")
 		}
 	}
@@ -191,7 +196,7 @@ func TestProcessEnv(t *testing.T) {
 			"GMM_SSH_KNOWN_HOSTS": "khkeyenv",
 		}
 		conf.ProcessEnv(logger, env)
-		if conf.Ssh.KnownHosts != "khkeyenv" {
+		if conf.SSH.KnownHosts != "khkeyenv" {
 			t.Fatal("failed setting host key from an env variable")
 		}
 	}
@@ -228,7 +233,7 @@ func TestValidate(t *testing.T) {
 		conf := Config{
 			SrcRepo: "src",
 			DstRepo: "dst",
-			Ssh: SshConf{
+			SSH: SSHConf{
 				PrivateKey: "key",
 			},
 		}
@@ -243,7 +248,7 @@ func TestValidate(t *testing.T) {
 		conf := Config{
 			SrcRepo: "src",
 			DstRepo: "dst",
-			Ssh: SshConf{
+			SSH: SSHConf{
 				PrivateKey: "key",
 				KnownHosts: "khkey",
 			},
@@ -258,7 +263,7 @@ func TestValidate(t *testing.T) {
 		conf := Config{
 			SrcRepo: "src",
 			DstRepo: "dst",
-			Ssh: SshConf{
+			SSH: SSHConf{
 				PrivateKey:     "key",
 				KnownHosts:     "khkey",
 				KnownHostsPath: "khpath",
@@ -273,7 +278,7 @@ func TestValidate(t *testing.T) {
 		conf := Config{
 			SrcRepo: "src",
 			DstRepo: "dst",
-			Ssh: SshConf{
+			SSH: SSHConf{
 				PrivateKey: "key",
 				KnownHosts: "khkey",
 			},
@@ -287,7 +292,7 @@ func TestValidate(t *testing.T) {
 		conf := Config{
 			SrcRepo: "src",
 			DstRepo: "dst",
-			Ssh: SshConf{
+			SSH: SSHConf{
 				PrivateKey:     "key",
 				KnownHostsPath: "khpath",
 			},

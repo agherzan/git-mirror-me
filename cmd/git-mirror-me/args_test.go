@@ -43,7 +43,7 @@ func TestParseArgs(t *testing.T) {
 			t.Fatalf("setting host key failed: %s", err)
 		}
 		if !cmp.Equal(*config, mirror.Config{
-			Ssh: mirror.SshConf{
+			SSH: mirror.SSHConf{
 				KnownHostsPath: "file",
 			},
 		}) {

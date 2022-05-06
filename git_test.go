@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	testSshKey = `-----BEGIN OPENSSH PRIVATE KEY-----
+	testSSHKey = `-----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAlwAAAAdzc2gtcn
 NhAAAAAwEAAQAAAIEAxi9PL+/GEMwIsmQeWm50/LNZqSrxk4Oa3D+W2iTDKbmE/2RgroHX
 /Lc+V6r4HDZTticNDeHr3mLMSBKR4YSgySp+TQWIflLEM8wO2MnkmJ07oH3BHV/bIz7rIp
@@ -529,8 +529,8 @@ func TestDoMirror(t *testing.T) {
 	conf := Config{
 		SrcRepo: srcRepoPath,
 		DstRepo: dstRepoPath,
-		Ssh: SshConf{
-			PrivateKey: testSshKey,
+		SSH: SSHConf{
+			PrivateKey: testSSHKey,
 			KnownHosts: testKnownHost,
 		},
 	}

@@ -10,9 +10,9 @@ import (
 	"path"
 )
 
-// SshConf structure defines SSH configuration used for git authentication over
+// SSHConf structure defines SSH configuration used for git authentication over
 // SSH.
-type SshConf struct {
+type SSHConf struct {
 	PrivateKey     string
 	KnownHosts     string
 	KnownHostsPath string
@@ -23,44 +23,44 @@ type SshConf struct {
 type Config struct {
 	SrcRepo string
 	DstRepo string
-	Ssh     SshConf
+	SSH     SSHConf
 	Debug   bool
 }
 
-// GetSshKey is the getter function for the private SSH key from a
+// GetSSHKey is the getter function for the private SSH key from a
 // configuration struct.
-func (conf Config) GetSshKey() string {
-	return conf.Ssh.PrivateKey
+func (conf Config) GetSSHKey() string {
+	return conf.SSH.PrivateKey
 }
 
-// SetSshKey is the setter function for the private SSH key from a
+// SetSSHKey is the setter function for the private SSH key from a
 // configuration struct.
-func (conf *Config) SetSshKey(key string) {
-	conf.Ssh.PrivateKey = key
+func (conf *Config) SetSSHKey(key string) {
+	conf.SSH.PrivateKey = key
 }
 
 // GetKnownHosts is the getter function for the public host key from a
 // configuration struct.
 func (conf Config) GetKnownHosts() string {
-	return conf.Ssh.KnownHosts
+	return conf.SSH.KnownHosts
 }
 
 // GetKnownHosts is the setter function for the public host key from a
 // configuration struct.
 func (conf *Config) SetKnownHosts(key string) {
-	conf.Ssh.KnownHosts = key
+	conf.SSH.KnownHosts = key
 }
 
 // GetKnownHostsPath is the getter function for the public host key by file
 // path from a configuration struct.
 func (conf Config) GetKnownHostsPath() string {
-	return conf.Ssh.KnownHostsPath
+	return conf.SSH.KnownHostsPath
 }
 
 // GetKnownHostsPath is the setter function for the public host key by file
 // path from a configuration struct.
 func (conf *Config) SetKnownHostsPath(file string) {
-	conf.Ssh.KnownHostsPath = file
+	conf.SSH.KnownHostsPath = file
 }
 
 // Pretty provides a string representation of the configuration structure. It
@@ -69,8 +69,9 @@ func (conf *Config) SetKnownHostsPath(file string) {
 func (conf Config) Pretty() string {
 	// It's important to have a passed by value conf struct to not have the
 	// masking affect the struct's actual values.
-	conf.SetSshKey(mask(conf.Ssh.PrivateKey))
-	conf.SetKnownHosts(mask(conf.Ssh.KnownHosts))
+	conf.SetSSHKey(mask(conf.SSH.PrivateKey))
+	conf.SetKnownHosts(mask(conf.SSH.KnownHosts))
+
 	out, _ := json.MarshalIndent(conf, "", "\t")
 
 	return string(out)
@@ -95,8 +96,8 @@ func (conf *Config) ProcessEnv(logger *Logger, env map[string]string) {
 		conf.DstRepo = env["GMM_DST_REPO"]
 	}
 
-	conf.Ssh.PrivateKey = env["GMM_SSH_PRIVATE_KEY"]
-	conf.Ssh.KnownHosts = env["GMM_SSH_KNOWN_HOSTS"]
+	conf.SSH.PrivateKey = env["GMM_SSH_PRIVATE_KEY"]
+	conf.SSH.KnownHosts = env["GMM_SSH_KNOWN_HOSTS"]
 }
 
 // Validate provides the logic of validating a configuration.
@@ -113,7 +114,7 @@ func (conf Config) Validate(logger *Logger) error {
 
 	logger.Info("Destination repository:", conf.DstRepo, ".")
 
-	if len(conf.GetSshKey()) == 0 {
+	if len(conf.GetSSHKey()) == 0 {
 		logger.Warn("Tool configured with no authentication.")
 	} else {
 		if len(conf.GetKnownHosts()) != 0 &&
