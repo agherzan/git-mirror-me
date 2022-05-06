@@ -26,6 +26,14 @@ func TestNewLogger(t *testing.T) {
 	}
 }
 
+// TestGetOutput tests the GetOutput function.
+func TestGetOutput(t *testing.T) {
+	t.Parallel()
+
+	logger := NewLogger(os.Stderr)
+	_ = logger.GetOutput()
+}
+
 // TestDebug checks debug logging.
 func TestDebug(t *testing.T) {
 	t.Parallel()
