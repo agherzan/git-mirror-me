@@ -20,6 +20,7 @@ type Logger struct {
 	warning *log.Logger
 	err     *log.Logger
 	fatal   *log.Logger
+	output  io.Writer
 }
 
 // NewLogger returns a new Logger that will use the passed io.Writer.
@@ -30,8 +31,15 @@ func NewLogger(out io.Writer) *Logger {
 	logger.warning = log.New(out, "[WARN ]: ", 0)
 	logger.err = log.New(out, "[ERROR]: ", 0)
 	logger.fatal = log.New(out, "[FATAL]: ", 0)
+	logger.output = out
 
 	return &logger
+}
+
+// GetOutput returns the output the logger is using for all the logging
+// operations.
+func (l Logger) GetOutput() io.Writer {
+	return l.output
 }
 
 // Debug is printing a log message using the debug logger when debug mode is
