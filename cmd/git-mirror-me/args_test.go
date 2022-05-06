@@ -13,6 +13,7 @@ import (
 
 // TestParseArgs tests that basic command line parsing works as expected.
 func TestParseArgs(t *testing.T) {
+	t.Parallel()
 	{
 		// Test passing -source-repository.
 		config, _, err := parseArgs("test", []string{"-source-repository=src"})

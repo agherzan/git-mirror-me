@@ -9,12 +9,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/agherzan/git-mirror-me-action"
-	"github.com/agherzan/git-mirror-me-action/internal/utils"
+	mirror "github.com/agherzan/git-mirror-me"
+	"github.com/agherzan/git-mirror-me/internal/utils"
 )
 
 // TestRun tests the run function.
 func TestRun(t *testing.T) {
+	t.Parallel()
+
 	// no need for logs
 	devnull, _ := os.Open(os.DevNull)
 	defer devnull.Close()
