@@ -10,6 +10,14 @@ import (
 	"path"
 )
 
+var (
+	ErrNoSrc     = errors.New("no source repository provided")
+	ErrNoDst     = errors.New("no destination repository provided")
+	ErrNoHostKey = errors.New("SSH authentication requires host public keys")
+	ErrHostKey   = errors.New("host public keys provided via both file path " +
+		"and content")
+)
+
 // SSHConf structure defines SSH configuration used for git authentication over
 // SSH.
 type SSHConf struct {
@@ -103,13 +111,13 @@ func (conf *Config) ProcessEnv(logger *Logger, env map[string]string) {
 // Validate provides the logic of validating a configuration.
 func (conf Config) Validate(logger *Logger) error {
 	if len(conf.SrcRepo) == 0 {
-		return errors.New("no source repository provided")
+		return ErrNoSrc
 	}
 
 	logger.Info("Source repository:", conf.SrcRepo, ".")
 
 	if len(conf.DstRepo) == 0 {
-		return errors.New("no destination repository provided")
+		return ErrNoDst
 	}
 
 	logger.Info("Destination repository:", conf.DstRepo, ".")
@@ -119,11 +127,10 @@ func (conf Config) Validate(logger *Logger) error {
 	} else {
 		if len(conf.GetKnownHosts()) != 0 &&
 			len(conf.GetKnownHostsPath()) != 0 {
-			return errors.New("host public keys provided via both file path " +
-				"and content")
+			return ErrHostKey
 		} else if len(conf.GetKnownHosts()) == 0 &&
 			len(conf.GetKnownHostsPath()) == 0 {
-			return errors.New("SSH authentication requires host public keys")
+			return ErrNoHostKey
 		}
 	}
 
