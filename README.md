@@ -75,20 +75,14 @@ descending order of their precedence:
 * The hosts public keys used for host validation.
 * The format needs to be based on the`known_hosts` file.
 
-## Tests and Checks
+## Tests and Linters
 
 Use the provided `make` script. For tests, a `tests` target is provided: `make
 tests`.
 
-Extra checks can be executed using with `make checks`. This make target has
-additional but optional host dependencies on:
-
-* [ineffassign](https://github.com/gordonklaus/ineffassign) -  Detect
-  ineffectual assignments in Go code.
-* [gocyclo](https://github.com/fzipp/gocyclo) -  Calculate cyclomatic
-  complexities of functions in Go source code.
-* [misspell](https://github.com/client9/misspell) - Correct commonly misspelled
-  English words in source files.
+Linters can be executed using `make lint`. This make target has additional host
+dependencies on
+[golangci-lint](https://github.com/golangci/golangci-lint).
 
 ## Contributing
 
