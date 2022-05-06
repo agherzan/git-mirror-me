@@ -80,7 +80,10 @@ func (conf Config) Pretty() string {
 	conf.SetSSHKey(mask(conf.SSH.PrivateKey))
 	conf.SetKnownHosts(mask(conf.SSH.KnownHosts))
 
-	out, _ := json.MarshalIndent(conf, "", "\t")
+	out, err := json.MarshalIndent(conf, "", "\t")
+	if err != nil {
+		return ""
+	}
 
 	return string(out)
 }
