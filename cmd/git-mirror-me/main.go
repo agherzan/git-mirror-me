@@ -5,6 +5,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -14,8 +15,9 @@ import (
 
 func run(logger *mirror.Logger, env map[string]string, progName string, args []string) error {
 	conf, output, err := parseArgs(progName, args)
-	if err == flag.ErrHelp {
-		fmt.Println(output)
+	if errors.Is(err, flag.ErrHelp) {
+		fmt.Fprintf(os.Stderr, output)
+
 		return nil
 	} else if err != nil {
 		return fmt.Errorf("%s", output)
