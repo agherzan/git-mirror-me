@@ -96,8 +96,9 @@ func TestError(t *testing.T) {
 
 // TestFatalMock checks fatal logging using a mocked exit function.
 func TestFatalMock(t *testing.T) {
-	t.Parallel()
-
+	// We can't run this in parallel with other tests as it messes up with
+	// os.Exit which other tests might require - for example TestFatal. So
+	// do not flag it with t.Parallel().
 	var buf bytes.Buffer
 	logger := NewLogger(&buf)
 
