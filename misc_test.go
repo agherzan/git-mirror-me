@@ -10,6 +10,8 @@ import (
 
 // TestMask tests the mask function.
 func TestMask(t *testing.T) {
+	t.Parallel()
+
 	if m := mask(""); m != "" {
 		t.Fatalf("unexpected output for \"\" input, got %s", m)
 	}

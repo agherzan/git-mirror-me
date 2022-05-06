@@ -36,6 +36,8 @@ Hau0thh3byP4srEz6dAAAADmFuZHJlaUBxd2lya2xlAQIDBA==
 
 // TestFilterOutRefs tests the filterOutRefs function.
 func TestFilterOutRefs(t *testing.T) {
+	t.Parallel()
+
 	{
 		// Filter matches refs.
 		path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
@@ -217,6 +219,8 @@ func TestFilterOutRefs(t *testing.T) {
 
 // TestRefsToDeleteSpecs tests refsToDeleteSpecs function.
 func TestRefsToDeleteSpecs(t *testing.T) {
+	t.Parallel()
+
 	{
 		specs := refsToDeleteSpecs([]*plumbing.Reference{})
 		if !utils.SlicesAreEqual(utils.SpecsToStrings(specs), []string{}) {
@@ -239,6 +243,8 @@ func TestRefsToDeleteSpecs(t *testing.T) {
 
 // TestExtraRefs tests extraRefs function.
 func TestExtraRefs(t *testing.T) {
+	t.Parallel()
+
 	{
 		path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
 		if err != nil {
@@ -327,6 +333,8 @@ func TestExtraRefs(t *testing.T) {
 
 // TestExtraSpecs tests extraSpecs function.
 func TestExtraSpecs(t *testing.T) {
+	t.Parallel()
+
 	{
 		path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
 		if err != nil {
@@ -415,6 +423,8 @@ func TestExtraSpecs(t *testing.T) {
 
 // TestSetupStagingRepo tests setupStagingRepo function.
 func TestSetupStagingRepo(t *testing.T) {
+	t.Parallel()
+
 	// no need for logs
 	devnull, _ := os.Open(os.DevNull)
 	defer devnull.Close()
@@ -484,6 +494,8 @@ func TestSetupStagingRepo(t *testing.T) {
 
 // TestDoMirror tests DoMirror function.
 func TestDoMirror(t *testing.T) {
+	t.Parallel()
+
 	// no need for logs
 	devnull, _ := os.Open(os.DevNull)
 	defer devnull.Close()

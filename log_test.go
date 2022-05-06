@@ -19,6 +19,8 @@ func osExitMock(exitCode int) {
 
 // TestNewLogger tests the NewLogger function.
 func TestNewLogger(t *testing.T) {
+	t.Parallel()
+
 	if logger := NewLogger(os.Stderr); logger == nil {
 		t.Fatal("failed to create a logger on stderr")
 	}
@@ -26,6 +28,8 @@ func TestNewLogger(t *testing.T) {
 
 // TestDebug checks debug logging.
 func TestDebug(t *testing.T) {
+	t.Parallel()
+
 	{
 		// Test debug mode on.
 		var b bytes.Buffer
@@ -50,6 +54,8 @@ func TestDebug(t *testing.T) {
 
 // TestInfo checks info logging.
 func TestInfo(t *testing.T) {
+	t.Parallel()
+
 	var b bytes.Buffer
 	logger := NewLogger(&b)
 
@@ -62,6 +68,8 @@ func TestInfo(t *testing.T) {
 
 // TestWarn checks warn logging.
 func TestWarn(t *testing.T) {
+	t.Parallel()
+
 	var b bytes.Buffer
 	logger := NewLogger(&b)
 
@@ -74,6 +82,8 @@ func TestWarn(t *testing.T) {
 
 // TestError checks error logging.
 func TestError(t *testing.T) {
+	t.Parallel()
+
 	var b bytes.Buffer
 	logger := NewLogger(&b)
 
@@ -86,6 +96,8 @@ func TestError(t *testing.T) {
 
 // TestFatalMock checks fatal logging using a mocked exit function.
 func TestFatalMock(t *testing.T) {
+	t.Parallel()
+
 	var buf bytes.Buffer
 	logger := NewLogger(&buf)
 
@@ -103,6 +115,8 @@ func TestFatalMock(t *testing.T) {
 
 // TestFatal checks fatal logging.
 func TestFatal(t *testing.T) {
+	t.Parallel()
+
 	if os.Getenv("RUNTESTFATAL") == "1" {
 		var b bytes.Buffer
 		logger := NewLogger(&b)

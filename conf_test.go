@@ -11,6 +11,8 @@ import (
 
 // TestSetGetSSHKey tests the getter and setter for the SSH private key.
 func TestSetGetSSHKey(t *testing.T) {
+	t.Parallel()
+
 	config := Config{
 		SSH: SSHConf{
 			PrivateKey: "key",
@@ -30,6 +32,8 @@ func TestSetGetSSHKey(t *testing.T) {
 
 // TestSetGetKnownHosts tests the getter and setter for the host public key.
 func TestSetGetKnownHosts(t *testing.T) {
+	t.Parallel()
+
 	config := Config{
 		SSH: SSHConf{
 			KnownHosts: "key",
@@ -50,6 +54,8 @@ func TestSetGetKnownHosts(t *testing.T) {
 // TestSetGetKnownHostsPath tests the getter and setter for the host public
 // key provided by file path.
 func TestSetGetKnownHostsPath(t *testing.T) {
+	t.Parallel()
+
 	config := Config{
 		SSH: SSHConf{
 			KnownHostsPath: "keypath",
@@ -69,6 +75,8 @@ func TestSetGetKnownHostsPath(t *testing.T) {
 
 // TestPretty tests the pretty output of a configuration structure.
 func TestPretty(t *testing.T) {
+	t.Parallel()
+
 	// This also verifies that the sensitive fields are masked.
 	out := Config{
 		SrcRepo: "src",
@@ -98,6 +106,8 @@ func TestPretty(t *testing.T) {
 
 // TestProcessEnv tests that the environment variables are used as expected.
 func TestProcessEnv(t *testing.T) {
+	t.Parallel()
+
 	// No need for logs.
 	devnull, _ := os.Open(os.DevNull)
 	defer devnull.Close()
@@ -204,6 +214,8 @@ func TestProcessEnv(t *testing.T) {
 
 // TestValidate tests various valid/invalid configurations.
 func TestValidate(t *testing.T) {
+	t.Parallel()
+
 	// No need for logs.
 	devnull, _ := os.Open(os.DevNull)
 	defer devnull.Close()
