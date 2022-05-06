@@ -13,7 +13,8 @@ description: |
   repository to the value computed from a GitHub action environment.
 license: MIT
 adopt-info: git-mirror-me 
-base: core20
+base: bare
+build-base: core20
 
 confinement: strict
 
@@ -52,3 +53,4 @@ apps:
   git-mirror-me:
     command: bin/git-mirror-me
     plugs: [network, home]
+    adapter: none
