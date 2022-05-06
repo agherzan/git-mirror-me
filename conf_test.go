@@ -92,8 +92,8 @@ func TestPretty(t *testing.T) {
 	"SrcRepo": "src",
 	"DstRepo": "dst",
 	"SSH": {
-		"PrivateKey": "3c6e0b8a9c15224a8228b9a98ca1531d",
-		"KnownHosts": "86721e0d720a6ddcb1b2a15996ecf7f1",
+		"PrivateKey": "2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683",
+		"KnownHosts": "b3f1ba1ea27e621a8cab09c9e601097fd84c3c438dee43d9ee7b0efe8cfd0ecd",
 		"KnownHostsPath": "khpath"
 	},
 	"Debug": true

@@ -16,7 +16,7 @@ func TestMask(t *testing.T) {
 		t.Fatalf("unexpected output for \"\" input, got %s", m)
 	}
 
-	if m := mask("foo"); m != "acbd18db4cc2f85cedef654fccc4a4d8" {
+	if m := mask("foo"); m != "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae" {
 		t.Fatalf("unexpected output for \"foo\" input, got %s", m)
 	}
 }

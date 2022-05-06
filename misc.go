@@ -5,7 +5,7 @@
 package mirror
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"encoding/hex"
 )
 
@@ -13,7 +13,7 @@ func mask(what string) string {
 	var masked string
 
 	if len(what) != 0 {
-		h := md5.Sum([]byte(what))
+		h := sha256.Sum256([]byte(what))
 		masked = hex.EncodeToString(h[:])
 	}
 
