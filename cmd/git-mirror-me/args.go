@@ -32,7 +32,7 @@ func parseArgs(progName string, arguments []string) (*mirror.Config, string, err
 CLI arguments/flags
 `, path.Base(progName))
 
-		flag.PrintDefaults()
+		flags.PrintDefaults()
 		fmt.Fprintf(output,
 			`
 Environment variables
