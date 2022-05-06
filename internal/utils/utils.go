@@ -170,7 +170,8 @@ func RepoRefsSlice(repo *git.Repository) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	refs.ForEach(func(ref *plumbing.Reference) error {
+
+	_ = refs.ForEach(func(ref *plumbing.Reference) error {
 		refsSlice = append(refsSlice, ref.Name().String())
 		return nil
 	})
@@ -204,11 +205,12 @@ func RepoRefsCheckHash(repo *git.Repository, hash plumbing.Hash) (bool, error) {
 
 	refs, err := repo.References()
 	if err != nil {
-		return result, err
+		return result, fmt.Errorf("failed to get references: %w", err)
 	}
 
 	result = true
-	refs.ForEach(func(ref *plumbing.Reference) error {
+
+	_ = refs.ForEach(func(ref *plumbing.Reference) error {
 		if ref.Hash() != hash {
 			result = false
 		}
