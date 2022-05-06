@@ -23,21 +23,26 @@ func run(logger *mirror.Logger, env map[string]string, progName string, args []s
 
 	conf.ProcessEnv(logger, env)
 	logger.Debug(conf.Debug, conf.Pretty())
+
 	err = conf.Validate(logger)
 	if err != nil {
-		return fmt.Errorf("configuration failed: %w.", err)
+		return fmt.Errorf("configuration failed: %w", err)
 	}
+
 	err = mirror.DoMirror(*conf, logger)
 	if err != nil {
-		return fmt.Errorf("mirror operation failed: %w.", err)
+		return fmt.Errorf("mirror operation failed: %w", err)
 	}
+
 	return nil
 }
 
 func main() {
 	// Keep the main function minimum as it is not covered by testing.
 	logger := mirror.NewLogger(os.Stderr)
+
 	var env map[string]string
+
 	envVars := []string{
 		"GMM_SRC_REPO",
 		"GITHUB_SERVER_URL",
@@ -46,11 +51,13 @@ func main() {
 		"GMM_SSH_PRIVATE_KEY",
 		"GMM_SSH_KNOWN_HOSTS",
 	}
+
 	for _, envVar := range envVars {
 		if val, set := os.LookupEnv(envVar); set {
 			env[envVar] = val
 		}
 	}
+
 	if err := run(logger, env, os.Args[0], os.Args[1:]); err != nil {
 		logger.Fatal(err)
 	}

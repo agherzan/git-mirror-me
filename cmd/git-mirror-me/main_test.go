@@ -25,7 +25,9 @@ func TestRun(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary src repo: %s", err)
 	}
+
 	defer os.RemoveAll(srcRepoPath)
+
 	_, srcHead, err := utils.NewTestRepo(srcRepoPath, []string{
 		"refs/heads/a",
 		"refs/heads/b",
@@ -42,7 +44,9 @@ func TestRun(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary dst repo: %s", err)
 	}
+
 	defer os.RemoveAll(dstRepoPath)
+
 	dstRepo, _, err := utils.NewTestRepo(dstRepoPath, []string{
 		"refs/heads/a",
 		"refs/heads/b",
@@ -72,6 +76,7 @@ func TestRun(t *testing.T) {
 	// Fail on an invalid destination repository.
 	env := map[string]string{"GMM_SRC_REPO": srcRepoPath}
 	args = []string{"--destination-repository", "invalid"}
+
 	if err := run(logger, env, "test", args); err == nil {
 		t.Fatal("run succeeded with an invalid dst repository")
 	}
@@ -79,6 +84,7 @@ func TestRun(t *testing.T) {
 	// Valid run.
 	env = map[string]string{"GMM_SRC_REPO": srcRepoPath}
 	args = []string{"--destination-repository", dstRepoPath}
+
 	if err := run(logger, env, "test", args); err != nil {
 		t.Fatalf("run failed: %s", err)
 	}
@@ -88,6 +94,7 @@ func TestRun(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get the dst repo refs: %s", err)
 	}
+
 	if !utils.SlicesAreEqual(dstRepoRefs, []string{
 		"HEAD",
 		"refs/heads/master",
@@ -97,10 +104,12 @@ func TestRun(t *testing.T) {
 	}) {
 		t.Fatalf("unexpected refs in the dst repo: %s", dstRepoRefs)
 	}
+
 	ok, err := utils.RepoRefsCheckHash(dstRepo, srcHead)
 	if err != nil {
 		t.Fatalf("dst repo hash check failed: %s", err)
 	}
+
 	if !ok {
 		t.Fatal("unexpected hash test result for the dst repo")
 	}

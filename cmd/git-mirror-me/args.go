@@ -17,7 +17,9 @@ import (
 // 'arguments' string slice argument.
 func parseArgs(progName string, arguments []string) (*mirror.Config, string, error) {
 	var srcRepo, dstRepo, knownHostsPath string
+
 	var debug bool
+
 	var flagsOutput bytes.Buffer
 
 	flags := flag.NewFlagSet(progName, flag.ContinueOnError)
@@ -68,6 +70,7 @@ Environment variables
 			"providing the host public keys via the\n'GMM_SSH_KNOWN_HOSTS' "+
 			"environment variable.")
 	flags.BoolVar(&debug, "debug", false, "Run this tool in debug mode.")
+
 	if err := flags.Parse(arguments); err != nil {
 		return nil, flagsOutput.String(), err
 	}
