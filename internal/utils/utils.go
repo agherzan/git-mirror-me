@@ -22,6 +22,7 @@ func SortSlice(slice []string) []string {
 	if sort.StringsAreSorted(slice) {
 		return slice
 	}
+
 	sortedSlice := make([]string, len(slice))
 	copy(sortedSlice, slice)
 	sort.Strings(sortedSlice)
@@ -31,14 +32,16 @@ func SortSlice(slice []string) []string {
 
 // SlicesAreEqual checks if two slices are equal. Order is ignored but
 // duplicates are not.
-func SlicesAreEqual(a, b []string) bool {
-	a = SortSlice(a)
-	b = SortSlice(b)
-	if len(a) != len(b) {
+func SlicesAreEqual(sliceA, sliceB []string) bool {
+	sliceA = SortSlice(sliceA)
+	sliceB = SortSlice(sliceB)
+
+	if len(sliceA) != len(sliceB) {
 		return false
 	}
-	for i := 0; i < len(a); i++ {
-		if a[i] != b[i] {
+
+	for i := 0; i < len(sliceA); i++ {
+		if sliceA[i] != sliceB[i] {
 			return false
 		}
 	}
@@ -71,28 +74,35 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 	}
 
 	// Create an in-memory repository so we can initialise the references.
-	fs := memfs.New()
-	repo, err := git.Init(memory.NewStorage(), fs)
+	memoryFs := memfs.New()
+
+	repo, err := git.Init(memory.NewStorage(), memoryFs)
 	if err != nil {
 		return nil, headHash, err
 	}
+
 	worktree, err := repo.Worktree()
 	if err != nil {
 		return nil, headHash, err
 	}
-	f, err := fs.Create("testfile.txt")
+
+	testFile, err := memoryFs.Create("testfile.txt")
 	if err != nil {
 		return nil, headHash, err
 	}
-	defer f.Close()
-	_, err = f.Write([]byte("test"))
+
+	defer testFile.Close()
+
+	_, err = testFile.Write([]byte("test"))
 	if err != nil {
 		return nil, headHash, err
 	}
+
 	_, err = worktree.Add("testfile.txt")
 	if err != nil {
 		return nil, headHash, err
 	}
+
 	_, err = worktree.Commit("test commit", &git.CommitOptions{
 		Author: &object.Signature{
 			Name:  "Example",
@@ -109,9 +119,12 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 	if err != nil {
 		return nil, headHash, err
 	}
+
 	headHash = head.Hash()
+
 	for _, ref := range refs {
 		r := plumbing.NewHashReference(plumbing.ReferenceName(ref), headHash)
+
 		err = repo.Storer.SetReference(r)
 		if err != nil {
 			return nil, headHash, err
@@ -126,6 +139,7 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 	if err != nil {
 		return nil, headHash, err
 	}
+
 	err = bareRepoRemote.Push(&git.PushOptions{
 		RemoteName: "origin",
 		RefSpecs:   []config.RefSpec{"*:*"},
@@ -139,6 +153,7 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 	// Also, set the HEAD of the bare repo so that all refs point to the same
 	// test revision.
 	bareHead := plumbing.NewHashReference(plumbing.HEAD, headHash)
+
 	err = bareRepo.Storer.SetReference(bareHead)
 	if err != nil {
 		return nil, headHash, err
@@ -186,16 +201,20 @@ func RefsToStrings(refs []*plumbing.Reference) []string {
 // same hash.
 func RepoRefsCheckHash(repo *git.Repository, hash plumbing.Hash) (bool, error) {
 	var result bool
+
 	refs, err := repo.References()
 	if err != nil {
 		return result, err
 	}
+
 	result = true
 	refs.ForEach(func(ref *plumbing.Reference) error {
 		if ref.Hash() != hash {
 			result = false
 		}
+
 		return nil
 	})
+
 	return result, nil
 }

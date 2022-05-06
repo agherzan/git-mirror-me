@@ -17,37 +17,37 @@ import (
 // TestSortSlice tests the SortSlice function.
 func TestSortSlice(t *testing.T) {
 	{
-		s := []string{"b", "a"}
-		sorted := SortSlice(s)
-		if !cmp.Equal(s, []string{"b", "a"}) {
-			t.Fatalf("SortSlice did in place sort: %s", s)
+		slice := []string{"b", "a"}
+		sortedSlice := SortSlice(slice)
+		if !cmp.Equal(slice, []string{"b", "a"}) {
+			t.Fatalf("SortSlice did in place sort: %s", slice)
 		}
-		if !cmp.Equal(sorted, []string{"a", "b"}) {
-			t.Fatalf("unexpected sort return: %s", s)
-		}
-	}
-	{
-		s := SortSlice([]string{""})
-		if !cmp.Equal(s, []string{""}) {
-			t.Fatalf("unexpected sort return: %s", s)
+		if !cmp.Equal(sortedSlice, []string{"a", "b"}) {
+			t.Fatalf("unexpected sort return: %s", slice)
 		}
 	}
 	{
-		s := SortSlice([]string{"a", "b", "c", "d"})
-		if !cmp.Equal(s, []string{"a", "b", "c", "d"}) {
-			t.Fatalf("unexpected sort return: %s", s)
+		slice := SortSlice([]string{""})
+		if !cmp.Equal(slice, []string{""}) {
+			t.Fatalf("unexpected sort return: %s", slice)
 		}
 	}
 	{
-		s := SortSlice([]string{"c", "b", "a"})
-		if !cmp.Equal(s, []string{"a", "b", "c"}) {
-			t.Fatalf("unexpected sort return: %s", s)
+		slice := SortSlice([]string{"a", "b", "c", "d"})
+		if !cmp.Equal(slice, []string{"a", "b", "c", "d"}) {
+			t.Fatalf("unexpected sort return: %s", slice)
 		}
 	}
 	{
-		s := SortSlice([]string{"b", "a", "a"})
-		if !cmp.Equal(s, []string{"a", "a", "b"}) {
-			t.Fatalf("unexpected sort return: %s", s)
+		slice := SortSlice([]string{"c", "b", "a"})
+		if !cmp.Equal(slice, []string{"a", "b", "c"}) {
+			t.Fatalf("unexpected sort return: %s", slice)
+		}
+	}
+	{
+		slice := SortSlice([]string{"b", "a", "a"})
+		if !cmp.Equal(slice, []string{"a", "a", "b"}) {
+			t.Fatalf("unexpected sort return: %s", slice)
 		}
 	}
 }
@@ -57,40 +57,50 @@ func TestSlicesAreEqual(t *testing.T) {
 	if !SlicesAreEqual([]string{"a", "b", "c"}, []string{"a", "b", "c"}) {
 		t.Fatalf("equal slice test failed when comparing two sorted copies")
 	}
+
 	if !SlicesAreEqual([]string{"a", "b", "c"}, []string{"b", "c", "a"}) {
 		t.Fatalf("equal slice test failed when comparing two unsorted copies")
 	}
+
 	if !SlicesAreEqual([]string{}, []string{}) {
 		t.Fatalf("equal slice test failed when comparing two empty slices")
 	}
+
 	if SlicesAreEqual([]string{"a", "b"}, []string{"b", "c"}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of same size")
 	}
+
 	if SlicesAreEqual([]string{"a", "b"}, []string{"b", "c", "a"}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of different size [1]")
 	}
+
 	if SlicesAreEqual([]string{"a", "b"}, []string{"a", "b", "a"}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of different size [2]")
 	}
+
 	if SlicesAreEqual([]string{}, []string{"a", "b", "a"}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of different size [3]")
 	}
+
 	if SlicesAreEqual([]string{"a"}, []string{"a", ""}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of different size [4]")
 	}
+
 	if SlicesAreEqual([]string{"a"}, []string{"a", "a"}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of different size [5]")
 	}
+
 	if SlicesAreEqual([]string{"a"}, []string{"", "a"}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of different size [6]")
 	}
+
 	if SlicesAreEqual([]string{""}, []string{"", ""}) {
 		t.Fatalf("equal slice test failed when comparing two different slices " +
 			"of different size [6]")
@@ -103,15 +113,19 @@ func TestNewBareRepo(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
 	}
+
 	defer os.RemoveAll(path)
+
 	repo, err := NewBareRepo(path)
 	if err != nil {
 		t.Fatalf("failed to create a bare repo: %s", err)
 	}
+
 	refs, err := RepoRefsSlice(repo)
 	if err != nil {
 		t.Fatalf("failed to get repo's refs: %s", err)
 	}
+
 	if !SlicesAreEqual(refs, []string{"HEAD"}) {
 		t.Fatalf("unexpected refs in repo: %s", refs)
 	}
@@ -123,7 +137,9 @@ func TestNewTestRepo(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
 	}
+
 	defer os.RemoveAll(path)
+
 	repo, hash, err := NewTestRepo(path, []string{
 		"refs/heads/foo",
 		"refs/meta/bar",
@@ -131,10 +147,12 @@ func TestNewTestRepo(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a test repo: %s", err)
 	}
+
 	refs, err := RepoRefsSlice(repo)
 	if err != nil {
 		t.Fatalf("failed to get repo's refs: %s", err)
 	}
+
 	if !SlicesAreEqual(refs, []string{
 		"HEAD",
 		"refs/heads/master",
@@ -143,10 +161,12 @@ func TestNewTestRepo(t *testing.T) {
 	}) {
 		t.Fatalf("unexpected refs in repo: %s", refs)
 	}
+
 	check, err := RepoRefsCheckHash(repo, hash)
 	if err != nil {
 		t.Fatal("failed to check repo refs hash")
 	}
+
 	if !check {
 		t.Fatal("unexpected ref hash")
 	}
@@ -158,7 +178,9 @@ func TestRepoRefsSlice(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
 	}
+
 	defer os.RemoveAll(path)
+
 	repo, _, err := NewTestRepo(path, []string{
 		"refs/heads/a",
 		"refs/heads/b",
@@ -166,10 +188,12 @@ func TestRepoRefsSlice(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error creating a test repo %s", err)
 	}
+
 	refs, err := RepoRefsSlice(repo)
 	if err != nil {
 		t.Fatalf("error getting the refs as slice: %s", err)
 	}
+
 	if !SlicesAreEqual(refs, []string{
 		"HEAD",
 		"refs/heads/master",
@@ -230,7 +254,9 @@ func TestRepoRefsCheckHash(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
 	}
+
 	defer os.RemoveAll(path)
+
 	repo, hash, err := NewTestRepo(path, []string{
 		"refs/heads/foo",
 		"refs/meta/bar",
@@ -238,18 +264,22 @@ func TestRepoRefsCheckHash(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error creating a test repo %s", err)
 	}
-	ok, err := RepoRefsCheckHash(repo, hash)
+
+	pass, err := RepoRefsCheckHash(repo, hash)
 	if err != nil {
 		t.Fatalf("RepoRefsCheckHash failed: %s", err)
 	}
-	if !ok {
+
+	if !pass {
 		t.Fatal("unexpected hash test result")
 	}
-	ok, err = RepoRefsCheckHash(repo, plumbing.NewHash(""))
+
+	pass, err = RepoRefsCheckHash(repo, plumbing.NewHash(""))
 	if err != nil {
 		t.Fatalf("RepoRefsCheckHash failed: %s", err)
 	}
-	if ok {
+
+	if pass {
 		t.Fatal("unexpected hash test result")
 	}
 }
