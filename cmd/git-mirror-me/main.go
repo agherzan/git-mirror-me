@@ -16,7 +16,7 @@ import (
 func run(logger *mirror.Logger, env map[string]string, progName string, args []string) error {
 	conf, output, err := parseArgs(progName, args)
 	if errors.Is(err, flag.ErrHelp) {
-		fmt.Fprintf(os.Stderr, output)
+		fmt.Fprintf(logger.GetOutput(), output)
 
 		return nil
 	} else if err != nil {
