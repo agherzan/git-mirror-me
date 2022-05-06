@@ -180,7 +180,7 @@ func RepoRefsSlice(repo *git.Repository) ([]string, error) {
 // SpecsToStrings takes a slice of refspecs and returns them as a slice of
 // strings.
 func SpecsToStrings(specs []config.RefSpec) []string {
-	var str []string
+	str := make([]string, 0, len(specs))
 	for _, spec := range specs {
 		str = append(str, spec.String())
 	}
@@ -190,7 +190,7 @@ func SpecsToStrings(specs []config.RefSpec) []string {
 // RefsToStrings takes a slice of references and returns their names as a slice
 // of strings.
 func RefsToStrings(refs []*plumbing.Reference) []string {
-	var str []string
+	str := make([]string, 0, len(refs))
 	for _, ref := range refs {
 		str = append(str, ref.Name().String())
 	}
