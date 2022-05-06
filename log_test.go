@@ -125,6 +125,7 @@ func TestFatal(t *testing.T) {
 		return
 	}
 
+	//#nosec G204 -- This is only for testing
 	cmd := exec.Command(os.Args[0], "-test.run=TestFatal")
 	cmd.Env = append(os.Environ(), "RUNTESTFATAL=1")
 
