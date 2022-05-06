@@ -9,6 +9,11 @@ import (
 	"testing"
 )
 
+const (
+	testPrivateKey     = "setkey"
+	testKnownHostsPath = "setkeypath"
+)
+
 // TestSetGetSSHKey tests the getter and setter for the SSH private key.
 func TestSetGetSSHKey(t *testing.T) {
 	t.Parallel()
@@ -19,13 +24,13 @@ func TestSetGetSSHKey(t *testing.T) {
 		},
 	}
 
-	config.SetSSHKey("setkey")
+	config.SetSSHKey(testPrivateKey)
 
-	if config.SSH.PrivateKey != "setkey" {
+	if config.SSH.PrivateKey != testPrivateKey {
 		t.Fatal("ssh key setter failed")
 	}
 
-	if config.GetSSHKey() != "setkey" {
+	if config.GetSSHKey() != testPrivateKey {
 		t.Fatal("ssh key getter failed")
 	}
 }
@@ -40,13 +45,13 @@ func TestSetGetKnownHosts(t *testing.T) {
 		},
 	}
 
-	config.SetKnownHosts("setkey")
+	config.SetKnownHosts(testPrivateKey)
 
-	if config.SSH.KnownHosts != "setkey" {
+	if config.SSH.KnownHosts != testPrivateKey {
 		t.Fatal("host key (by value) setter failed")
 	}
 
-	if config.GetKnownHosts() != "setkey" {
+	if config.GetKnownHosts() != testPrivateKey {
 		t.Fatal("host key (by value) getter failed")
 	}
 }
@@ -62,13 +67,13 @@ func TestSetGetKnownHostsPath(t *testing.T) {
 		},
 	}
 
-	config.SetKnownHostsPath("setkeypath")
+	config.SetKnownHostsPath(testKnownHostsPath)
 
-	if config.SSH.KnownHostsPath != "setkeypath" {
+	if config.SSH.KnownHostsPath != testKnownHostsPath {
 		t.Fatal("host key (by file path) setter failed")
 	}
 
-	if config.GetKnownHostsPath() != "setkeypath" {
+	if config.GetKnownHostsPath() != testKnownHostsPath {
 		t.Fatal("host key (by file path) getter failed")
 	}
 }
