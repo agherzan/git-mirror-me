@@ -171,6 +171,7 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 // as a string slice.
 func RepoRefsSlice(repo *git.Repository) ([]string, error) {
 	var refsSlice []string
+
 	refs, err := repo.References()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get references: %w", err)
@@ -178,8 +179,10 @@ func RepoRefsSlice(repo *git.Repository) ([]string, error) {
 
 	_ = refs.ForEach(func(ref *plumbing.Reference) error {
 		refsSlice = append(refsSlice, ref.Name().String())
+
 		return nil
 	})
+
 	return refsSlice, nil
 }
 
@@ -190,6 +193,7 @@ func SpecsToStrings(specs []config.RefSpec) []string {
 	for _, spec := range specs {
 		str = append(str, spec.String())
 	}
+
 	return str
 }
 
@@ -200,6 +204,7 @@ func RefsToStrings(refs []*plumbing.Reference) []string {
 	for _, ref := range refs {
 		str = append(str, ref.Name().String())
 	}
+
 	return str
 }
 
