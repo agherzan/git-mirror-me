@@ -104,11 +104,13 @@ func (conf Config) Validate(logger *Logger) error {
 	if len(conf.SrcRepo) == 0 {
 		return errors.New("no source repository provided")
 	}
+
 	logger.Info("Source repository:", conf.SrcRepo, ".")
 
 	if len(conf.DstRepo) == 0 {
 		return errors.New("no destination repository provided")
 	}
+
 	logger.Info("Destination repository:", conf.DstRepo, ".")
 
 	if len(conf.GetSshKey()) == 0 {

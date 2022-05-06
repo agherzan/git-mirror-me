@@ -32,10 +32,12 @@ func TestSetGetKnownHosts(t *testing.T) {
 			KnownHosts: "key",
 		},
 	}
+
 	config.SetKnownHosts("setkey")
 	if config.Ssh.KnownHosts != "setkey" {
 		t.Fatal("host key (by value) setter failed")
 	}
+
 	if config.GetKnownHosts() != "setkey" {
 		t.Fatal("host key (by value) getter failed")
 	}
@@ -49,10 +51,12 @@ func TestSetGetKnownHostsPath(t *testing.T) {
 			KnownHostsPath: "keypath",
 		},
 	}
+
 	config.SetKnownHostsPath("setkeypath")
 	if config.Ssh.KnownHostsPath != "setkeypath" {
 		t.Fatal("host key (by file path) setter failed")
 	}
+
 	if config.GetKnownHostsPath() != "setkeypath" {
 		t.Fatal("host key (by file path) getter failed")
 	}
@@ -81,6 +85,7 @@ func TestPretty(t *testing.T) {
 	},
 	"Debug": true
 }`
+
 	if out != expectedOut {
 		t.Fatalf("unexpected Pretty(): %s", out)
 	}

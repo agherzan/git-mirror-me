@@ -31,10 +31,12 @@ func filterOutRefs(repo *git.Repository, prefixes []string) error {
 	if len(prefixes) == 0 {
 		return nil
 	}
+
 	refs, err := repo.References()
 	if err != nil {
 		return err
 	}
+
 	if err = refs.ForEach(func(ref *plumbing.Reference) error {
 		name := ref.Name().String()
 		for _, prefix := range prefixes {
@@ -42,9 +44,11 @@ func filterOutRefs(repo *git.Repository, prefixes []string) error {
 				if err := repo.Storer.RemoveReference(ref.Name()); err != nil {
 					return err
 				}
+
 				break
 			}
 		}
+
 		return nil
 	}); err != nil {
 		return err
@@ -60,6 +64,7 @@ func refsToDeleteSpecs(refs []*plumbing.Reference) []config.RefSpec {
 	for _, ref := range refs {
 		specs = append(specs, config.RefSpec(":"+ref.Name().String()))
 	}
+
 	return specs
 }
 
@@ -67,22 +72,27 @@ func refsToDeleteSpecs(refs []*plumbing.Reference) []config.RefSpec {
 // repository.
 func extraRefs(repo *git.Repository, refs []*plumbing.Reference) ([]*plumbing.Reference, error) {
 	var retRefs []*plumbing.Reference
+
 	for _, ref := range refs {
 		repoRefs, err := repo.References()
 		if err != nil {
 			return nil, err
 		}
+
 		found := false
 		repoRefs.ForEach(func(repoRef *plumbing.Reference) error {
 			if repoRef.Name().String() == ref.Name().String() {
 				found = true
 			}
+
 			return nil
 		})
+
 		if !found {
 			retRefs = append(retRefs, ref)
 		}
 	}
+
 	return retRefs, nil
 }
 
@@ -93,6 +103,7 @@ func extraSpecs(repo *git.Repository, refs []*plumbing.Reference) ([]config.RefS
 	if err != nil {
 		return nil, err
 	}
+
 	return refsToDeleteSpecs(diffRefs), nil
 }
 
@@ -101,6 +112,7 @@ func extraSpecs(repo *git.Repository, refs []*plumbing.Reference) ([]config.RefS
 func setupStagingRepo(conf Config, logger *Logger) (*git.Repository, error) {
 	// Setup a working repository.
 	logger.Info("Setting up a staging git repository.")
+
 	repo, err := git.Init(memory.NewStorage(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed initialising staging git repository: %w",
@@ -118,6 +130,7 @@ func setupStagingRepo(conf Config, logger *Logger) (*git.Repository, error) {
 
 	// Fetch the source.
 	logger.Info("Fetching all refs from", conf.SrcRepo, "...")
+
 	if err := src.Fetch(&git.FetchOptions{
 		RemoteName: srcRemoteName,
 		RefSpecs:   []config.RefSpec{"refs/*:refs/*"},
@@ -149,6 +162,7 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 			if err != nil {
 				return fmt.Errorf("error creating known_hosts tmp file: %w", err)
 			}
+
 			defer func() {
 				f.Close()
 				os.Remove(f.Name())
@@ -159,10 +173,12 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 				return fmt.Errorf("error writing known_hosts tmp file: %w", err)
 			}
 		}
+
 		hostKeyCallback, err := ssh.NewKnownHostsCallback(knownHostsPath)
 		if err != nil {
 			return fmt.Errorf("failed to set up host keys: %w", err)
 		}
+
 		hostKeyCallbackHelper := ssh.HostKeyCallbackHelper{
 			HostKeyCallback: hostKeyCallback,
 		}
@@ -180,6 +196,7 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 	}
 
 	logger.Info("Pushing to destination...")
+
 	err = dst.Push(&git.PushOptions{
 		RemoteName: dstRemoteName,
 		Auth:       auth,
@@ -232,11 +249,13 @@ func DoMirror(conf Config, logger *Logger) error {
 	if err != nil {
 		return err
 	}
+
 	// Do not push GitHub special references used for dealing with pull
 	// requests.
 	if err := filterOutRefs(repo, []string{refsFilterPrefix}); err != nil {
 		return fmt.Errorf("failed to filter out the refs: %w", err)
 	}
+
 	if err := pushWithAuth(conf, logger, repo); err != nil {
 		return err
 	}

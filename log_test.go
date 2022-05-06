@@ -53,6 +53,7 @@ func TestInfo(t *testing.T) {
 	logger := NewLogger(&b)
 
 	logger.Info("msg")
+
 	if output := b.String(); output != "[INFO ]: msg\n" {
 		t.Fatalf("unexpected info output: %s", output)
 	}
@@ -64,6 +65,7 @@ func TestWarn(t *testing.T) {
 	logger := NewLogger(&b)
 
 	logger.Warn("msg")
+
 	if output := b.String(); output != "[WARN ]: msg\n" {
 		t.Fatalf("unexpected warn output: %s", output)
 	}
@@ -75,6 +77,7 @@ func TestError(t *testing.T) {
 	logger := NewLogger(&b)
 
 	logger.Error("msg")
+
 	if output := b.String(); output != "[ERROR]: msg\n" {
 		t.Fatalf("unexpected error output: %s", output)
 	}
@@ -87,6 +90,7 @@ func TestFatalMock(t *testing.T) {
 
 	origOsExit := osExit
 	osExit = osExitMock
+
 	defer func() { osExit = origOsExit }()
 
 	logger.Fatal("msg")
@@ -101,13 +105,17 @@ func TestFatal(t *testing.T) {
 		var b bytes.Buffer
 		logger := NewLogger(&b)
 		logger.Fatal("msg")
+
 		return
 	}
+
 	cmd := exec.Command(os.Args[0], "-test.run=TestFatal")
 	cmd.Env = append(os.Environ(), "RUNTESTFATAL=1")
+
 	err := cmd.Run()
 	if e, ok := err.(*exec.ExitError); ok && !e.Success() {
 		return
 	}
+
 	t.Fatalf("fatal log didn't fail the running process")
 }

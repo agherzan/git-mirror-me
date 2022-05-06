@@ -42,7 +42,9 @@ func TestFilterOutRefs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create a temporary repo: %s", err)
 		}
+
 		defer os.RemoveAll(path)
+
 		repo, head, err := utils.NewTestRepo(path, []string{
 			"refs/heads/a",
 			"refs/heads/b",
@@ -52,14 +54,17 @@ func TestFilterOutRefs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create a test repo: %s", err)
 		}
+
 		err = filterOutRefs(repo, []string{"refs/meta"})
 		if err != nil {
 			t.Fatalf("failed to filter refs: %s", err)
 		}
+
 		refs, err := utils.RepoRefsSlice(repo)
 		if err != nil {
 			t.Fatalf("failed to get repo's refs: %s", err)
 		}
+
 		if !utils.SlicesAreEqual(refs, []string{
 			"HEAD",
 			"refs/heads/master",
@@ -68,10 +73,12 @@ func TestFilterOutRefs(t *testing.T) {
 		}) {
 			t.Fatalf("unexpected refs in repo: %s", refs)
 		}
+
 		check, err := utils.RepoRefsCheckHash(repo, head)
 		if err != nil {
 			t.Fatal("failed to check repo refs hash")
 		}
+
 		if !check {
 			t.Fatal("unexpected ref hash")
 		}
@@ -82,7 +89,9 @@ func TestFilterOutRefs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create a temporary repo: %s", err)
 		}
+
 		defer os.RemoveAll(path)
+
 		repo, head, err := utils.NewTestRepo(path, []string{
 			"refs/heads/a",
 			"refs/heads/b",
@@ -92,14 +101,17 @@ func TestFilterOutRefs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create a test repo: %s", err)
 		}
+
 		err = filterOutRefs(repo, []string{"refs/nonexistent"})
 		if err != nil {
 			t.Fatalf("failed to filter refs: %s", err)
 		}
+
 		refs, err := utils.RepoRefsSlice(repo)
 		if err != nil {
 			t.Fatalf("failed to get repo's refs: %s", err)
 		}
+
 		if !utils.SlicesAreEqual(refs, []string{
 			"HEAD",
 			"refs/heads/master",
@@ -110,10 +122,12 @@ func TestFilterOutRefs(t *testing.T) {
 		}) {
 			t.Fatalf("unexpected refs in repo: %s", refs)
 		}
+
 		check, err := utils.RepoRefsCheckHash(repo, head)
 		if err != nil {
 			t.Fatal("failed to check repo refs hash")
 		}
+
 		if !check {
 			t.Fatal("unexpected ref hash")
 		}
@@ -124,7 +138,9 @@ func TestFilterOutRefs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create a temporary repo: %s", err)
 		}
+
 		defer os.RemoveAll(path)
+
 		repo, head, err := utils.NewTestRepo(path, []string{
 			"refs/heads/a",
 			"refs/heads/b",
@@ -134,10 +150,12 @@ func TestFilterOutRefs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create a test repo: %s", err)
 		}
+
 		err = filterOutRefs(repo, []string{""})
 		if err != nil {
 			t.Fatalf("failed to filter refs: %s", err)
 		}
+
 		refs, err := utils.RepoRefsSlice(repo)
 		if err != nil {
 			t.Fatalf("failed to get repo's refs: %s", err)
@@ -145,10 +163,12 @@ func TestFilterOutRefs(t *testing.T) {
 		if !utils.SlicesAreEqual(refs, []string{}) {
 			t.Fatalf("unexpected refs in repo: %s", refs)
 		}
+
 		check, err := utils.RepoRefsCheckHash(repo, head)
 		if err != nil {
 			t.Fatal("failed to check repo refs hash")
 		}
+
 		if !check {
 			t.Fatal("unexpected ref hash")
 		}
@@ -159,29 +179,36 @@ func TestFilterOutRefs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create a temporary repo: %s", err)
 		}
+
 		defer os.RemoveAll(path)
+
 		repo, head, err := utils.NewTestRepo(path, []string{})
 		if err != nil {
 			t.Fatalf("failed to create a test repo: %s", err)
 		}
+
 		err = filterOutRefs(repo, []string{})
 		if err != nil {
 			t.Fatalf("failed to filter refs: %s", err)
 		}
+
 		refs, err := utils.RepoRefsSlice(repo)
 		if err != nil {
 			t.Fatalf("failed to get repo's refs: %s", err)
 		}
+
 		if !utils.SlicesAreEqual(refs, []string{
 			"HEAD",
 			"refs/heads/master",
 		}) {
 			t.Fatalf("unexpected refs in repo: %s", refs)
 		}
+
 		check, err := utils.RepoRefsCheckHash(repo, head)
 		if err != nil {
 			t.Fatal("failed to check repo refs hash")
 		}
+
 		if !check {
 			t.Fatal("unexpected ref hash")
 		}
@@ -399,7 +426,9 @@ func TestSetupStagingRepo(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
 	}
+
 	defer os.RemoveAll(srcRepoPath)
+
 	_, srcHead, err := utils.NewTestRepo(srcRepoPath, []string{
 		"refs/heads/a",
 		"refs/heads/b",
@@ -409,6 +438,7 @@ func TestSetupStagingRepo(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a test repo: %s", err)
 	}
+
 	// First test that it fails with an invalid source.
 	_, err = setupStagingRepo(Config{
 		SrcRepo: "/invalid",
@@ -416,6 +446,7 @@ func TestSetupStagingRepo(t *testing.T) {
 	if err == nil {
 		t.Fatal("setupStagingRepo with an invalid source")
 	}
+
 	stagingRepo, err := setupStagingRepo(Config{
 		SrcRepo: srcRepoPath,
 	}, logger)
@@ -429,6 +460,7 @@ func TestSetupStagingRepo(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get the refs: %s", err)
 	}
+
 	if !utils.SlicesAreEqual(stagingRepoRefs, []string{
 		"HEAD",
 		"refs/heads/master",
@@ -439,10 +471,12 @@ func TestSetupStagingRepo(t *testing.T) {
 	}) {
 		t.Fatalf("unexpected refs in staging repo: %s", stagingRepoRefs)
 	}
+
 	ok, err := utils.RepoRefsCheckHash(stagingRepo, srcHead)
 	if err != nil {
 		t.Fatalf("utils.RepoRefsCheckHash failed: %s", err)
 	}
+
 	if ok {
 		t.Fatal("unexpected hash test result")
 	}
@@ -460,7 +494,9 @@ func TestDoMirror(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary src repo: %s", err)
 	}
+
 	defer os.RemoveAll(srcRepoPath)
+
 	_, srcHead, err := utils.NewTestRepo(srcRepoPath, []string{
 		"refs/heads/a",
 		"refs/heads/b",
@@ -477,7 +513,9 @@ func TestDoMirror(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create a temporary dst repo: %s", err)
 	}
+
 	defer os.RemoveAll(dstRepoPath)
+
 	dstRepo, _, err := utils.NewTestRepo(dstRepoPath, []string{
 		"refs/heads/a",
 		"refs/heads/b",
@@ -496,6 +534,7 @@ func TestDoMirror(t *testing.T) {
 			KnownHosts: testKnownHost,
 		},
 	}
+
 	err = DoMirror(conf, logger)
 	if err != nil {
 		t.Fatalf("DoMirror failed: %s", err)
@@ -506,6 +545,7 @@ func TestDoMirror(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get the dst repo refs: %s", err)
 	}
+
 	if !utils.SlicesAreEqual(dstRepoRefs, []string{
 		"HEAD",
 		"refs/heads/master",
@@ -515,10 +555,12 @@ func TestDoMirror(t *testing.T) {
 	}) {
 		t.Fatalf("unexpected refs in the dst repo: %s", dstRepoRefs)
 	}
+
 	ok, err := utils.RepoRefsCheckHash(dstRepo, srcHead)
 	if err != nil {
 		t.Fatalf("dst repo hash check failed: %s", err)
 	}
+
 	if !ok {
 		t.Fatal("unexpected hash test result for the dst repo")
 	}
