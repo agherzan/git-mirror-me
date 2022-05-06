@@ -110,6 +110,35 @@ func extraSpecs(repo *git.Repository, refs []*plumbing.Reference) ([]config.RefS
 	return refsToDeleteSpecs(diffRefs), nil
 }
 
+// pruneRemote removes all the references in a remote that are not available in
+// the repo.
+func pruneRemote(remote *git.Remote, auth transport.AuthMethod, repo *git.Repository) error {
+	refs, err := remote.List(&git.ListOptions{
+		Auth: auth,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to list the destination remote: %w", err)
+	}
+
+	deleteSpecs, err := extraSpecs(repo, refs)
+	if err != nil {
+		return fmt.Errorf("failed to get the prune specs: %w", err)
+	}
+
+	if len(deleteSpecs) > 0 {
+		err := remote.Push(&git.PushOptions{
+			RemoteName: remote.Config().Name,
+			Auth:       auth,
+			RefSpecs:   deleteSpecs,
+		})
+		if err != nil && errors.Is(err, git.NoErrAlreadyUpToDate) {
+			return fmt.Errorf("failed to prune destination: %w", err)
+		}
+	}
+
+	return nil
+}
+
 // setupStagingRepo initialises an in-memory git repositry populated with the
 // source's references.
 func setupStagingRepo(conf Config, logger *Logger) (*git.Repository, error) {
@@ -222,26 +251,11 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 	// We can not use prune in git.Push due to an existing bug
 	// https://github.com/go-git/go-git/issues/520 so we workaround it dealing
 	// with the prunning with a separate push.
-	dstRefs, err := dst.List(&git.ListOptions{
-		Auth: auth,
-	})
+	logger.Info("Pruning the destination...")
+
+	err = pruneRemote(dst, auth, stagingRepo)
 	if err != nil {
-		return fmt.Errorf("failed to list the destination remote: %w", err)
-	}
-	deleteSpecs, err := extraSpecs(stagingRepo, dstRefs)
-	if err != nil {
-		return fmt.Errorf("failed to prune destination: %w", err)
-	}
-	if len(deleteSpecs) > 0 {
-		logger.Info("Pruning the destination...")
-		err := dst.Push(&git.PushOptions{
-			RemoteName: dstRemoteName,
-			Auth:       auth,
-			RefSpecs:   deleteSpecs,
-		})
-		if err != nil && err != git.NoErrAlreadyUpToDate {
-			return err
-		}
+		return nil
 	}
 
 	return nil
