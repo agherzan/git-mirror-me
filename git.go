@@ -62,7 +62,7 @@ func filterOutRefs(repo *git.Repository, prefixes []string) error {
 // refsToDeleteSpecs returns a slice of delete refspecs for a slice of
 // references.
 func refsToDeleteSpecs(refs []*plumbing.Reference) []config.RefSpec {
-	var specs []config.RefSpec
+	specs := make([]config.RefSpec, 0, len(refs))
 	for _, ref := range refs {
 		specs = append(specs, config.RefSpec(":"+ref.Name().String()))
 	}
