@@ -86,8 +86,8 @@ func TestError(t *testing.T) {
 
 // TestFatalMock checks fatal logging using a mocked exit function.
 func TestFatalMock(t *testing.T) {
-	var b bytes.Buffer
-	logger := NewLogger(&b)
+	var buf bytes.Buffer
+	logger := NewLogger(&buf)
 
 	origOsExit := osExit
 	osExit = osExitMock
@@ -95,7 +95,8 @@ func TestFatalMock(t *testing.T) {
 	defer func() { osExit = origOsExit }()
 
 	logger.Fatal("msg")
-	if output := b.String(); output != "[FATAL]: msg\n" {
+
+	if output := buf.String(); output != "[FATAL]: msg\n" {
 		t.Fatalf("unexpected fatal output: %s", output)
 	}
 }

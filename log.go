@@ -23,14 +23,15 @@ type Logger struct {
 }
 
 // NewLogger returns a new Logger that will use the passed io.Writer.
-func NewLogger(o io.Writer) *Logger {
-	var l Logger
-	l.debug = log.New(o, "[DEBUG]: ", 0)
-	l.info = log.New(o, "[INFO ]: ", 0)
-	l.warning = log.New(o, "[WARN ]: ", 0)
-	l.err = log.New(o, "[ERROR]: ", 0)
-	l.fatal = log.New(o, "[FATAL]: ", 0)
-	return &l
+func NewLogger(out io.Writer) *Logger {
+	var logger Logger
+	logger.debug = log.New(out, "[DEBUG]: ", 0)
+	logger.info = log.New(out, "[INFO ]: ", 0)
+	logger.warning = log.New(out, "[WARN ]: ", 0)
+	logger.err = log.New(out, "[ERROR]: ", 0)
+	logger.fatal = log.New(out, "[FATAL]: ", 0)
+
+	return &logger
 }
 
 // Debug is printing a log message using the debug logger when debug mode is

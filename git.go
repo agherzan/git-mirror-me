@@ -192,17 +192,17 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 		knownHostsPath := conf.GetKnownHostsPath()
 
 		if len(conf.SSH.KnownHosts) != 0 {
-			f, err := ioutil.TempFile("/tmp", tmpKnownHostPathPrefix)
+			knownHostsFile, err := ioutil.TempFile("/tmp", tmpKnownHostPathPrefix)
 			if err != nil {
 				return fmt.Errorf("error creating known_hosts tmp file: %w", err)
 			}
 
 			defer func() {
-				f.Close()
-				os.Remove(f.Name())
+				knownHostsFile.Close()
+				os.Remove(knownHostsFile.Name())
 			}()
 
-			knownHostsPath = f.Name()
+			knownHostsPath = knownHostsFile.Name()
 
 			err = os.WriteFile(knownHostsPath, []byte(conf.SSH.KnownHosts), knownHostsPerm)
 			if err != nil {
