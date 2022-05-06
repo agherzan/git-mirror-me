@@ -82,7 +82,8 @@ func extraRefs(repo *git.Repository, refs []*plumbing.Reference) ([]*plumbing.Re
 		}
 
 		found := false
-		repoRefs.ForEach(func(repoRef *plumbing.Reference) error {
+
+		_ = repoRefs.ForEach(func(repoRef *plumbing.Reference) error {
 			if repoRef.Name().String() == ref.Name().String() {
 				found = true
 			}
