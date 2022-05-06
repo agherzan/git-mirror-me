@@ -20,7 +20,7 @@ func run(logger *mirror.Logger, env map[string]string, progName string, args []s
 
 		return nil
 	} else if err != nil {
-		return fmt.Errorf("%s", output)
+		return fmt.Errorf("%w", err)
 	}
 
 	conf.ProcessEnv(logger, env)
