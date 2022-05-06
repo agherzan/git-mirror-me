@@ -23,6 +23,7 @@ const (
 	srcRemoteName          = "src"
 	dstRemoteName          = "dst"
 	tmpKnownHostPathPrefix = "git-mirror-me-known_hosts-"
+	knownHostsPerm         = 0o600
 )
 
 // FilterOutRefs takes a repository and removes references based on a slice of
@@ -172,7 +173,7 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 
 			knownHostsPath = f.Name()
 
-			err = os.WriteFile(knownHostsPath, []byte(conf.SSH.KnownHosts), 0600)
+			err = os.WriteFile(knownHostsPath, []byte(conf.SSH.KnownHosts), knownHostsPerm)
 			if err != nil {
 				return fmt.Errorf("error writing known_hosts tmp file: %w", err)
 			}
