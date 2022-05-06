@@ -177,6 +177,33 @@ func setupStagingRepo(conf Config, logger *Logger) (*git.Repository, error) {
 // references to the configured destination repository (as a mirror).
 func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) error {
 	var auth transport.AuthMethod
+
+	// Set up the public host key.
+	//
+	// The host public keys can be provided via both content and path. When
+	// it is provided via content, we need to use a temporary known_hosts
+	// file.
+	knownHostsPath := conf.GetKnownHostsPath()
+
+	if len(conf.SSH.KnownHosts) != 0 {
+		knownHostsFile, err := ioutil.TempFile("/tmp", tmpKnownHostPathPrefix)
+		if err != nil {
+			return fmt.Errorf("error creating known_hosts tmp file: %w", err)
+		}
+
+		defer func() {
+			knownHostsFile.Close()
+			os.Remove(knownHostsFile.Name())
+		}()
+
+		knownHostsPath = knownHostsFile.Name()
+
+		err = os.WriteFile(knownHostsPath, []byte(conf.SSH.KnownHosts), knownHostsPerm)
+		if err != nil {
+			return fmt.Errorf("error writing known_hosts tmp file: %w", err)
+		}
+	}
+
 	// Set up SSH authentication.
 	if len(conf.SSH.PrivateKey) > 0 {
 		logger.Debug(conf.Debug, "Using SSH authentication.")
@@ -184,30 +211,6 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 		sshKeys, err := ssh.NewPublicKeys("git", []byte(conf.SSH.PrivateKey), "")
 		if err != nil {
 			return fmt.Errorf("failed to setup the SSH key: %w", err)
-		}
-
-		// The host public keys can be provided via both content and path. When
-		// it is provided via content, we need to use a temporary known_hosts
-		// file.
-		knownHostsPath := conf.GetKnownHostsPath()
-
-		if len(conf.SSH.KnownHosts) != 0 {
-			knownHostsFile, err := ioutil.TempFile("/tmp", tmpKnownHostPathPrefix)
-			if err != nil {
-				return fmt.Errorf("error creating known_hosts tmp file: %w", err)
-			}
-
-			defer func() {
-				knownHostsFile.Close()
-				os.Remove(knownHostsFile.Name())
-			}()
-
-			knownHostsPath = knownHostsFile.Name()
-
-			err = os.WriteFile(knownHostsPath, []byte(conf.SSH.KnownHosts), knownHostsPerm)
-			if err != nil {
-				return fmt.Errorf("error writing known_hosts tmp file: %w", err)
-			}
 		}
 
 		hostKeyCallback, err := ssh.NewKnownHostsCallback(knownHostsPath)
