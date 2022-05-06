@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/agherzan/git-mirror-me-action"
+	mirror "github.com/agherzan/git-mirror-me"
 )
 
 // parseArgs returns a configuration structure initialised from parsing the

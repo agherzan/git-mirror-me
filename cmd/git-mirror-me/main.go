@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/agherzan/git-mirror-me-action"
+	mirror "github.com/agherzan/git-mirror-me"
 )
 
 func run(logger *mirror.Logger, env map[string]string, progName string, args []string) error {

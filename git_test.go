@@ -9,7 +9,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/agherzan/git-mirror-me-action/internal/utils"
+	"github.com/agherzan/git-mirror-me/internal/utils"
 	"github.com/go-git/go-git/v5/plumbing"
 )
 

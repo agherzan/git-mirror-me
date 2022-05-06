@@ -7,7 +7,7 @@ package main
 import (
 	"testing"
 
-	"github.com/agherzan/git-mirror-me-action"
+	mirror "github.com/agherzan/git-mirror-me"
 	"github.com/google/go-cmp/cmp"
 )
 

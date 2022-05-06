@@ -1,4 +1,4 @@
-module github.com/agherzan/git-mirror-me-action
+module github.com/agherzan/git-mirror-me
 
 go 1.18
 
