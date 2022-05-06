@@ -6,6 +6,7 @@ package mirror
 
 import (
 	"bytes"
+	"errors"
 	"os"
 	"os/exec"
 	"testing"
@@ -113,7 +114,7 @@ func TestFatal(t *testing.T) {
 	cmd.Env = append(os.Environ(), "RUNTESTFATAL=1")
 
 	err := cmd.Run()
-	if e, ok := err.(*exec.ExitError); ok && !e.Success() {
+	if e := (&exec.ExitError{}); errors.As(err, &e) && !e.Success() {
 		return
 	}
 

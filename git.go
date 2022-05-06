@@ -5,6 +5,7 @@
 package mirror
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -35,7 +36,7 @@ func filterOutRefs(repo *git.Repository, prefixes []string) error {
 
 	refs, err := repo.References()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get references: %w", err)
 	}
 
 	if err = refs.ForEach(func(ref *plumbing.Reference) error {
@@ -43,7 +44,7 @@ func filterOutRefs(repo *git.Repository, prefixes []string) error {
 		for _, prefix := range prefixes {
 			if strings.HasPrefix(name, prefix) {
 				if err := repo.Storer.RemoveReference(ref.Name()); err != nil {
-					return err
+					return fmt.Errorf("failed to remove reference: %w", err)
 				}
 
 				break
@@ -52,7 +53,7 @@ func filterOutRefs(repo *git.Repository, prefixes []string) error {
 
 		return nil
 	}); err != nil {
-		return err
+		return fmt.Errorf("failed remove references: %w", err)
 	}
 
 	return nil
@@ -77,7 +78,7 @@ func extraRefs(repo *git.Repository, refs []*plumbing.Reference) ([]*plumbing.Re
 	for _, ref := range refs {
 		repoRefs, err := repo.References()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to get references: %w", err)
 		}
 
 		found := false
@@ -135,7 +136,7 @@ func setupStagingRepo(conf Config, logger *Logger) (*git.Repository, error) {
 	if err := src.Fetch(&git.FetchOptions{
 		RemoteName: srcRemoteName,
 		RefSpecs:   []config.RefSpec{"refs/*:refs/*"},
-	}); err != nil && err != git.NoErrAlreadyUpToDate {
+	}); err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
 		return nil, fmt.Errorf("failed to fetch source remote: %w", err)
 	}
 
@@ -209,12 +210,11 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 		Force:      true,
 		Prune:      false, // https://github.com/go-git/go-git/issues/520
 	})
-	switch err {
-	case nil:
+	if err == nil {
 		logger.Info("Successfully mirrored pushed to destination repository.")
-	case git.NoErrAlreadyUpToDate:
+	} else if errors.Is(err, git.NoErrAlreadyUpToDate) {
 		logger.Info("Destination already up to date.")
-	default:
+	} else {
 		return fmt.Errorf("failed to push to destination: %w", err)
 	}
 
