@@ -240,12 +240,15 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 		Force:      true,
 		Prune:      false, // https://github.com/go-git/go-git/issues/520
 	})
-	if err == nil {
-		logger.Info("Successfully mirrored pushed to destination repository.")
-	} else if errors.Is(err, git.NoErrAlreadyUpToDate) {
-		logger.Info("Destination already up to date.")
+	if err != nil {
+		switch {
+		case errors.Is(err, git.NoErrAlreadyUpToDate):
+			logger.Info("Destination already up to date.")
+		default:
+			return fmt.Errorf("failed to push to destination: %w", err)
+		}
 	} else {
-		return fmt.Errorf("failed to push to destination: %w", err)
+		logger.Info("Successfully mirrored pushed to destination repository.")
 	}
 
 	// We can not use prune in git.Push due to an existing bug
