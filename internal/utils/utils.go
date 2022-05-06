@@ -6,6 +6,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"sort"
 	"time"
 
@@ -16,6 +17,8 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/storage/memory"
 )
+
+var ErrInvalidRepoPath = errors.New("invalid repo path")
 
 // SortSlice gets a slice and returns a sorted copy of it.
 func SortSlice(slice []string) []string {
@@ -52,11 +55,12 @@ func SlicesAreEqual(sliceA, sliceB []string) bool {
 // NewBareRepo creates a new bare repo at a specific path.
 func NewBareRepo(path string) (*git.Repository, error) {
 	if len(path) == 0 {
-		return nil, errors.New("invalid path for repo")
+		return nil, ErrInvalidRepoPath
 	}
+
 	bareRepo, err := git.PlainInit(path, true)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to init bare repo: %w", err)
 	}
 
 	return bareRepo, nil
@@ -78,29 +82,30 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 
 	repo, err := git.Init(memory.NewStorage(), memoryFs)
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to create in-memory repo: %w",
+			err)
 	}
 
 	worktree, err := repo.Worktree()
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to get worktree: %w", err)
 	}
 
 	testFile, err := memoryFs.Create("testfile.txt")
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to create test file: %w", err)
 	}
 
 	defer testFile.Close()
 
 	_, err = testFile.Write([]byte("test"))
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to write test file: %w", err)
 	}
 
 	_, err = worktree.Add("testfile.txt")
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed add to index: %w", err)
 	}
 
 	_, err = worktree.Commit("test commit", &git.CommitOptions{
@@ -111,13 +116,13 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 		},
 	})
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed test commit: %w", err)
 	}
 
 	// Set the references to the HEAD's hash.
 	head, err := repo.Head()
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to get HEAD %w", err)
 	}
 
 	headHash = head.Hash()
@@ -127,7 +132,7 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 
 		err = repo.Storer.SetReference(r)
 		if err != nil {
-			return nil, headHash, err
+			return nil, headHash, fmt.Errorf("failed to set reference: %w", err)
 		}
 	}
 
@@ -137,7 +142,7 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 		URLs: []string{path},
 	})
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to create remote: %w", err)
 	}
 
 	err = bareRepoRemote.Push(&git.PushOptions{
@@ -147,7 +152,7 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 		Force:      true,
 	})
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to push to bare repo: %w", err)
 	}
 
 	// Also, set the HEAD of the bare repo so that all refs point to the same
@@ -156,7 +161,7 @@ func NewTestRepo(path string, refs []string) (*git.Repository, plumbing.Hash, er
 
 	err = bareRepo.Storer.SetReference(bareHead)
 	if err != nil {
-		return nil, headHash, err
+		return nil, headHash, fmt.Errorf("failed to set HEAD reference: %w", err)
 	}
 
 	return bareRepo, headHash, nil
@@ -168,7 +173,7 @@ func RepoRefsSlice(repo *git.Repository) ([]string, error) {
 	var refsSlice []string
 	refs, err := repo.References()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get references: %w", err)
 	}
 
 	_ = refs.ForEach(func(ref *plumbing.Reference) error {
