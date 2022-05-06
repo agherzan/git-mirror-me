@@ -107,7 +107,7 @@ func TestRun(t *testing.T) {
 		t.Fatalf("unexpected refs in the dst repo: %s", dstRepoRefs)
 	}
 
-	ok, err := utils.RepoRefsCheckHash(dstRepo, srcHead)
+	ok, err := utils.RepoRefsCheckHash(dstRepo, srcHead, "refs/")
 	if err != nil {
 		t.Fatalf("dst repo hash check failed: %s", err)
 	}
