@@ -16,6 +16,7 @@ import (
 
 // TestSortSlice tests the SortSlice function.
 func TestSortSlice(t *testing.T) {
+	t.Parallel()
 	{
 		slice := []string{"b", "a"}
 		sortedSlice := SortSlice(slice)
@@ -54,6 +55,8 @@ func TestSortSlice(t *testing.T) {
 
 // TestSlicesAreEqual tests the SlicesAreEqual function.
 func TestSlicesAreEqual(t *testing.T) {
+	t.Parallel()
+
 	if !SlicesAreEqual([]string{"a", "b", "c"}, []string{"a", "b", "c"}) {
 		t.Fatalf("equal slice test failed when comparing two sorted copies")
 	}
@@ -109,6 +112,8 @@ func TestSlicesAreEqual(t *testing.T) {
 
 // TestNewBareRepo tests the NewBareRepo function.
 func TestNewBareRepo(t *testing.T) {
+	t.Parallel()
+
 	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
@@ -133,6 +138,8 @@ func TestNewBareRepo(t *testing.T) {
 
 // TestNewTestRepo tests the testNewTestRepo function.
 func TestNewTestRepo(t *testing.T) {
+	t.Parallel()
+
 	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
@@ -174,6 +181,8 @@ func TestNewTestRepo(t *testing.T) {
 
 // TestRepoRefsSlice tests the RepoRefsSlice function.
 func TestRepoRefsSlice(t *testing.T) {
+	t.Parallel()
+
 	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
@@ -206,6 +215,7 @@ func TestRepoRefsSlice(t *testing.T) {
 
 // TestSpecsToStrings tests the SpecsToStrings function.
 func TestSpecsToStrings(t *testing.T) {
+	t.Parallel()
 	{
 		specs := SpecsToStrings([]config.RefSpec{})
 		if !SlicesAreEqual(specs, []string{}) {
@@ -228,6 +238,7 @@ func TestSpecsToStrings(t *testing.T) {
 
 // TestRefsToStrings tests the RefsToStrings function.
 func TestRefsToStrings(t *testing.T) {
+	t.Parallel()
 	{
 		refs := RefsToStrings([]*plumbing.Reference{})
 		if !SlicesAreEqual(refs, []string{}) {
@@ -250,6 +261,8 @@ func TestRefsToStrings(t *testing.T) {
 
 // TestRepoRefsCheckHash tests the RepoRefsCheckHash function.
 func TestRepoRefsCheckHash(t *testing.T) {
+	t.Parallel()
+
 	path, err := ioutil.TempDir("/tmp", "git-mirror-me-test-")
 	if err != nil {
 		t.Fatalf("failed to create a temporary repo: %s", err)
