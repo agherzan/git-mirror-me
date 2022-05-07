@@ -13,6 +13,12 @@ repositories on GitHub, GitLab, Bitbucket, etc.
 Why "Me"? The name derives from the tool's "ability" to default the source
 repository to the value computed from a GitHub action environment.
 
+## Install
+
+```
+go install github.com/agherzan/git-mirror-me/cmd/git-mirror-me@latest
+```
+
 ## Build
 
 Use the provided `make` script.
