@@ -6,6 +6,11 @@ SPDX-License-Identifier: MIT
 
 # Git Mirror-Me (`GMm`)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/agherzan/git-mirror-me)](https://goreportcard.com/report/github.com/agherzan/git-mirror-me)
+[![codecov](https://codecov.io/gh/agherzan/git-mirror-me/branch/main/graph/badge.svg?token=O54JVY4W31)](https://codecov.io/gh/agherzan/git-mirror-me)
+[![License](https://img.shields.io/github/license/agherzan/git-mirror-me?label=License)](/COPYING.MIT)
+[![REUSE status](https://api.reuse.software/badge/github.com/agherzan/git-mirror-me)](https://api.reuse.software/info/github.com/agherzan/git-mirror-me)
+
 This CLI tool provides the ability to mirror a repository to any other git
 repository with optional SSH authentication. For example, it can be used with
 repositories on GitHub, GitLab, Bitbucket, etc.
