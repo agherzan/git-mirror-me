@@ -3,7 +3,13 @@
 # SPDX-License-Identifier: MIT
 
 name: REUSE Compliance Check
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
   reuse:
     runs-on: ubuntu-latest

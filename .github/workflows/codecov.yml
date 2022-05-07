@@ -3,7 +3,13 @@
 # SPDX-License-Identifier: MIT
 
 name: Codecov
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
   coverage-push:
     runs-on: ${{ matrix.os }}
