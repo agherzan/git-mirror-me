@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Andrei Gherzan <andrei@gherzan.com>
+#
+# SPDX-License-Identifier: MIT
+
+name: Codecov
+on: [push]
+jobs:
+  run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    env:
+      OS: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.18.0'
+    - name: Generate coverage report
+      run: |
+        make testcover
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        env_vars: OS
+        fail_ci_if_error: true
+        files: ./coverage.out
+        verbose: true
