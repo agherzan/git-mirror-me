@@ -5,7 +5,7 @@
 name: Codecov
 on: [push]
 jobs:
-  run:
+  coverage-push:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
