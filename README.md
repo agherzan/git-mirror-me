@@ -26,7 +26,11 @@ go install github.com/agherzan/git-mirror-me/cmd/git-mirror-me@latest
 
 ## Build
 
-Use the provided `make` script.
+Use the provided `make` script by taking advantage of the `build` target:
+
+```
+make build
+```
 
 ## Tool configuration
 
