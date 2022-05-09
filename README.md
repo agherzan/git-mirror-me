@@ -88,8 +88,8 @@ descending order of their precedence:
 
 ## Tests and Linters
 
-Use the provided `make` script. For tests, a `tests` target is provided: `make
-tests`.
+Use the provided `make` script. For tests, a `test` target is provided: `make
+test`.
 
 Linters can be executed using `make lint`. This make target has additional host
 dependencies on
