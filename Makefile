@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 REUSE := $(shell command -v reuse 2> /dev/null)
+GOLANGCI := $(shell command -v golangci-lint 2> /dev/null)
 
 all: test testcover lint reuse build
 
@@ -13,6 +14,9 @@ testcover: test
 	go tool cover -func=coverage.out
 
 lint:
+ifndef GOLANGCI
+	$(error "golangci is required to run lint checks on this projects")
+endif
 	golangci-lint run
 
 reuse:
