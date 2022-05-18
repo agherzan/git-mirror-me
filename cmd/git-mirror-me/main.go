@@ -51,7 +51,7 @@ func main() {
 	// Keep the main function minimum as it is not covered by testing.
 	logger := mirror.NewLogger(os.Stderr)
 
-	var env map[string]string
+	env := make(map[string]string)
 
 	envVars := []string{
 		"GMM_SRC_REPO",
