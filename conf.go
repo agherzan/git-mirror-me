@@ -7,7 +7,6 @@ package mirror
 import (
 	"encoding/json"
 	"errors"
-	"path"
 )
 
 var (
@@ -98,7 +97,7 @@ func (conf *Config) ProcessEnv(logger *Logger, env map[string]string) {
 		} else {
 			url := env["GITHUB_SERVER_URL"]
 			repo := env["GITHUB_REPOSITORY"]
-			conf.SrcRepo = path.Join(url, repo)
+			conf.SrcRepo = url + "/" + repo
 		}
 	}
 
