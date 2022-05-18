@@ -133,11 +133,11 @@ func TestProcessEnv(t *testing.T) {
 		// Source can be set by GitHub CI environment variables.
 		conf := Config{}
 		env := map[string]string{
-			"GITHUB_SERVER_URL": "foo",
-			"GITHUB_REPOSITORY": "bar",
+			"GITHUB_SERVER_URL": "http://github.com",
+			"GITHUB_REPOSITORY": "user/repo",
 		}
 		conf.ProcessEnv(logger, env)
-		if conf.SrcRepo != "foo/bar" {
+		if conf.SrcRepo != "http://github.com/user/repo" {
 			t.Fatal("failed setting source repository from GitHub env variables")
 		}
 	}
