@@ -30,4 +30,4 @@ build:
 .SILENT: clean
 
 clean:
-	rm -rf bin *.out
+	rm -rf bin *.out dist
