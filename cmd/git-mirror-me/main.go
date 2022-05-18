@@ -9,17 +9,25 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	mirror "github.com/agherzan/git-mirror-me"
 )
 
 func run(logger *mirror.Logger, env map[string]string, progName string, args []string) error {
 	conf, output, err := parseArgs(progName, args)
-	if errors.Is(err, flag.ErrHelp) {
+
+	switch {
+	case errors.Is(err, flag.ErrHelp):
 		fmt.Fprintf(logger.GetOutput(), output)
 
 		return nil
-	} else if err != nil {
+	case errors.Is(err, ErrVersion):
+		debugInfo, _ := debug.ReadBuildInfo()
+		fmt.Fprintf(logger.GetOutput(), debugInfo.String())
+
+		return nil
+	case err != nil:
 		return fmt.Errorf("%w", err)
 	}
 

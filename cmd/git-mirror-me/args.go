@@ -6,6 +6,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"path"
@@ -13,12 +14,14 @@ import (
 	mirror "github.com/agherzan/git-mirror-me"
 )
 
+var ErrVersion = errors.New("mirror: version requested")
+
 // parseArgs returns a configuration structure initialised from parsing the
 // 'arguments' string slice argument.
 func parseArgs(progName string, arguments []string) (*mirror.Config, string, error) {
 	var srcRepo, dstRepo, knownHostsPath string
 
-	var debug bool
+	var debug, version bool
 
 	var flagsOutput bytes.Buffer
 
@@ -70,9 +73,14 @@ Environment variables
 			"providing the host public keys via the\n'GMM_SSH_KNOWN_HOSTS' "+
 			"environment variable.")
 	flags.BoolVar(&debug, "debug", false, "Run this tool in debug mode.")
+	flags.BoolVar(&version, "version", false, "Get version information for this tool.")
 
 	if err := flags.Parse(arguments); err != nil {
 		return nil, flagsOutput.String(), err
+	}
+
+	if version {
+		return nil, "", ErrVersion
 	}
 
 	return &mirror.Config{

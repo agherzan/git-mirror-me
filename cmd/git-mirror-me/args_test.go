@@ -5,6 +5,7 @@
 package main
 
 import (
+	"errors"
 	"testing"
 
 	mirror "github.com/agherzan/git-mirror-me"
@@ -69,5 +70,15 @@ func TestParseArgs(t *testing.T) {
 		if err == nil {
 			t.Fatal("invalid flag succeeded")
 		}
+	}
+}
+
+// TestVersionFlag tests version flags..
+func TestVersionFlag(t *testing.T) {
+	t.Parallel()
+
+	_, _, err := parseArgs("test", []string{"-version"})
+	if !errors.Is(err, ErrVersion) {
+		t.Fatal("version error was not returned")
 	}
 }

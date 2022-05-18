@@ -64,6 +64,12 @@ func TestRun(t *testing.T) {
 		t.Fatalf("help failed: %s", err)
 	}
 
+	// Test version.
+	args = []string{"-version"}
+	if err := run(logger, map[string]string{}, "test", args); err != nil {
+		t.Fatalf("version failed: %s", err)
+	}
+
 	// Test invalid argument.
 	args = []string{"-invalidflag"}
 	if err := run(logger, map[string]string{}, "test", args); err == nil {
