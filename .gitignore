@@ -5,3 +5,5 @@
 bin/*
 *.out
 *.snap
+
+dist/
