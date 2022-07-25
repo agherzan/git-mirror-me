@@ -552,6 +552,7 @@ func TestDoMirror(t *testing.T) {
 	conf := Config{
 		SrcRepo: srcRepoPath,
 		DstRepo: dstRepoPath,
+		Debug:   true,
 		SSH: SSHConf{
 			PrivateKey: testSSHKey,
 			KnownHosts: testKnownHost,
