@@ -112,7 +112,7 @@ func extraSpecs(repo *git.Repository, refs []*plumbing.Reference) ([]config.RefS
 
 // pruneRemote removes all the references in a remote that are not available in
 // the repo.
-func pruneRemote(remote *git.Remote, auth transport.AuthMethod, repo *git.Repository) error {
+func pruneRemote(conf Config, logger *Logger, remote *git.Remote, auth transport.AuthMethod, repo *git.Repository) error {
 	refs, err := remote.List(&git.ListOptions{
 		Auth: auth,
 	})
@@ -120,12 +120,13 @@ func pruneRemote(remote *git.Remote, auth transport.AuthMethod, repo *git.Reposi
 		return fmt.Errorf("failed to list the destination remote: %w", err)
 	}
 
-	deleteSpecs, err := extraSpecs(repo, refs)
-	if err != nil {
-		return fmt.Errorf("failed to get the prune specs: %w", err)
-	}
+	deleteRefs, _ := extraRefs(repo, refs)
+
+	deleteSpecs := refsToDeleteSpecs(deleteRefs)
 
 	if len(deleteSpecs) > 0 {
+		logger.Debug(conf.Debug, "Pruning the following refs:", deleteRefs)
+
 		err := remote.Push(&git.PushOptions{
 			RemoteName: remote.Config().Name,
 			Auth:       auth,
@@ -134,6 +135,8 @@ func pruneRemote(remote *git.Remote, auth transport.AuthMethod, repo *git.Reposi
 		if err != nil && errors.Is(err, git.NoErrAlreadyUpToDate) {
 			return fmt.Errorf("failed to prune destination: %w", err)
 		}
+	} else {
+		logger.Debug(conf.Debug, "No refs found to prune.")
 	}
 
 	return nil
@@ -259,7 +262,7 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 	// with the prunning with a separate push.
 	logger.Info("Pruning the destination...")
 
-	err = pruneRemote(dst, auth, stagingRepo)
+	err = pruneRemote(conf, logger, dst, auth, stagingRepo)
 	if err != nil {
 		return nil
 	}
