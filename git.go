@@ -234,7 +234,7 @@ func pushWithAuth(conf Config, logger *Logger, stagingRepo *git.Repository) erro
 		return fmt.Errorf("failed configuring destination remote: %w", err)
 	}
 
-	logger.Info("Pushing to destination...")
+	logger.Info("Pushing to", conf.DstRepo, "destination...")
 
 	err = dst.Push(&git.PushOptions{
 		RemoteName: dstRemoteName,
