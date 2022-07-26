@@ -215,6 +215,64 @@ func TestProcessEnv(t *testing.T) {
 			t.Fatal("failed setting host key from an env variable")
 		}
 	}
+
+	// Debug mode via an environment variable tests.
+	{
+		conf := Config{Debug: false}
+		env := map[string]string{
+			"GMM_DEBUG": "1",
+		}
+		conf.ProcessEnv(logger, env)
+		if conf.Debug != true {
+			t.Fatal("failed debug mode env variable test")
+		}
+	}
+	{
+		conf := Config{Debug: false}
+		env := map[string]string{
+			"GMM_DEBUG": "",
+		}
+		conf.ProcessEnv(logger, env)
+		if conf.Debug != false {
+			t.Fatal("failed debug mode env variable test")
+		}
+	}
+	{
+		conf := Config{Debug: false}
+		env := map[string]string{}
+		conf.ProcessEnv(logger, env)
+		if conf.Debug != false {
+			t.Fatal("failed debug mode env variable test")
+		}
+	}
+	{
+		conf := Config{Debug: true}
+		env := map[string]string{
+			"GMM_DEBUG": "1",
+		}
+		conf.ProcessEnv(logger, env)
+		if conf.Debug != true {
+			t.Fatal("failed debug mode env variable test")
+		}
+	}
+	{
+		conf := Config{Debug: true}
+		env := map[string]string{
+			"GMM_DEBUG": "",
+		}
+		conf.ProcessEnv(logger, env)
+		if conf.Debug != true {
+			t.Fatal("failed debug mode env variable test")
+		}
+	}
+	{
+		conf := Config{Debug: true}
+		env := map[string]string{}
+		conf.ProcessEnv(logger, env)
+		if conf.Debug != true {
+			t.Fatal("failed debug mode env variable test")
+		}
+	}
 }
 
 // TestValidate tests various valid/invalid configurations.

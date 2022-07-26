@@ -58,6 +58,7 @@ Run the tool in `help` mode (`git-mirror-me -h`) to check its full description.
 #### `-debug`
 
 * Runs the tool in debug mode.
+* Can also be enabled via an environment variable.
 
 ### Environment variables
 
@@ -89,6 +90,10 @@ descending order of their precedence:
 
 * The hosts public keys used for host validation.
 * The format needs to be based on the`known_hosts` file.
+
+#### `GMM_DEBUG`
+
+* When set to '1', runs the tools in debug mode.
 
 ## Tests and Linters
 

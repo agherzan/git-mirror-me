@@ -108,6 +108,12 @@ func (conf *Config) ProcessEnv(logger *Logger, env map[string]string) {
 
 	conf.SSH.PrivateKey = env["GMM_SSH_PRIVATE_KEY"]
 	conf.SSH.KnownHosts = env["GMM_SSH_KNOWN_HOSTS"]
+
+	if !conf.Debug {
+		if env["GMM_DEBUG"] == "1" {
+			conf.Debug = true
+		}
+	}
 }
 
 // Validate provides the logic of validating a configuration.
