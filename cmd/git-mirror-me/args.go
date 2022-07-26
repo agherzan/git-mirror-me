@@ -48,7 +48,7 @@ Environment variables
       * the 'GMM_SRC_REPO' environment variable
       * using the 'GITHUB_SERVER_URL' and 'GITHUB_REPOSITORY' environment
         variables as 'GITHUB_SERVER_URL/GITHUB_REPOSITORY'
-  GMM_DEST_REPO
+  GMM_DST_REPO
     Same as '-destination-repository' but overridden by the CLI argument.
   GMM_SSH_PRIVATE_KEY
     The SSH private key used for SSH authentication during git operations. When

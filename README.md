@@ -75,7 +75,7 @@ descending order of their precedence:
   * using the `GITHUB_SERVER_URL` and `GITHUB_REPOSITORY` environment variables
     as `GITHUB_SERVER_URL/GITHUB_REPOSITORY`
 
-#### `GMM_DEST_REPO`
+#### `GMM_DST_REPO`
 
 * Sets the destination repository for the mirror operation.
 
