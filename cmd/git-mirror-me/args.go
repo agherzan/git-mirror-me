@@ -60,6 +60,8 @@ Environment variables
     http://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT
     for more information.
     This can't be used in conjunction with '-ssh-known-hosts-path'.
+  GMM_DEBUG
+    Set this to '1' to run the tool in debug mode.
 `)
 	}
 	flags.StringVar(&srcRepo, "source-repository", "",
@@ -72,8 +74,11 @@ Environment variables
 		"Defines the path to the 'known_hosts' file.\nThis is an alternative to "+
 			"providing the host public keys via the\n'GMM_SSH_KNOWN_HOSTS' "+
 			"environment variable.")
-	flags.BoolVar(&debug, "debug", false, "Run this tool in debug mode.")
-	flags.BoolVar(&version, "version", false, "Get version information for this tool.")
+	flags.BoolVar(&debug, "debug", false, "Run this tool in debug mode. Can "+
+		"also be enabled by setting the environment variable 'GMM_DEBUG' to "+
+		"'1'.")
+	flags.BoolVar(&version, "version", false, "Get version information for this "+
+		"tool.")
 
 	if err := flags.Parse(arguments); err != nil {
 		return nil, flagsOutput.String(), err

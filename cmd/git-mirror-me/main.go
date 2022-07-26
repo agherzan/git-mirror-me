@@ -60,6 +60,7 @@ func main() {
 		"GMM_DEST_REPO",
 		"GMM_SSH_PRIVATE_KEY",
 		"GMM_SSH_KNOWN_HOSTS",
+		"GMM_DEBUG",
 	}
 
 	for _, envVar := range envVars {
